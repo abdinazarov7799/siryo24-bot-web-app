@@ -18,8 +18,6 @@ const HomePage = () => {
     const {t,i18n} = useTranslation();
     const navigate = useNavigate();
     const {lang,userId} = useParams();
-    const {branchesIsOpen,setBranchesIsOpen} = useStore();
-    const [isModalOpen, setIsModalOpen] = useState(!branchesIsOpen);
     const {data:categoriesData} = useGetAllQuery({
         key: KEYS.category_list,
         url: URLS.category_list,
@@ -29,22 +27,6 @@ const HomePage = () => {
             }
         }
     })
-    const {data:bannerData} = useGetAllQuery({
-        key: KEYS.banner_list,
-        url: URLS.banner_list,
-        params: {
-            params: {
-                user_id: userId,
-            }
-        }
-    })
-    const {data:branchesIsActive} = useGetAllQuery({
-        key: KEYS.get_branch_active,
-        url: URLS.get_branch_active,
-    })
-    useEffect(() => {
-        setBranchesIsOpen(get(branchesIsActive,'data.data'));
-    }, [get(branchesIsActive,'data')]);
     const changeLang = () => {
         localStorage.setItem('lang', lang);
         i18n.changeLanguage(lang)
@@ -54,11 +36,6 @@ const HomePage = () => {
     }, []);
     return (
         <Container>
-            <Modal title={t("Ma'lumot")} open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
-                <Text>
-                    {t("Hozirgi vaqtda barcha filiallarimiz yopilgan. Keltirilgan noqulayliklar uchun uzr so'raymiz.")}
-                </Text>
-            </Modal>
             <Space style={{width: "100%"}} direction={"vertical"}>
                 <Row gutter={[10,10]}>
                     {
