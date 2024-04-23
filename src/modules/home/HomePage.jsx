@@ -1,32 +1,58 @@
 import React, {useEffect, useState} from 'react';
-import {Carousel, Col, Row, Space, Typography, FloatButton, Button, Modal} from "antd";
+import {Input, Space, Typography} from "antd";
 import Container from "../../components/Container.jsx";
-import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
-import {get, isEqual} from "lodash";
+import {get} from "lodash";
 import {useTranslation} from "react-i18next";
-import ProductContainer from "./components/ProductContainer.jsx";
 import {useNavigate, useParams} from "react-router-dom";
+import Product from "./components/ProductContainer.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {useInfiniteQuery} from "react-query";
+import {request} from "../../services/api/index.js";
 import AffixContainer from "../../components/AffixContainer.jsx";
-import {ShoppingCartOutlined} from "@ant-design/icons";
-import {Link} from "react-scroll";
-import useStore from "../../services/store/useStore.jsx";
+import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
+import axios from "axios";
+import config from "../../config.js";
 const {Text} = Typography
 
 const HomePage = () => {
     const {t,i18n} = useTranslation();
     const navigate = useNavigate();
     const {lang,userId} = useParams();
-    const {data:categoriesData} = useGetAllQuery({
-        key: KEYS.category_list,
-        url: URLS.category_list,
-        params: {
-            params: {
-                user_id: userId,
-            }
-        }
-    })
+    const [params,setParams] = useState({})
+
+    const fetchData = (pageParam) => {
+        axios({
+            method: "get",
+            baseURL: config.API_ROOT,
+            url: `${URLS.product_list}/${userId}`,
+            params: {...params, page: pageParam},
+        }).then(response => {
+            console.log(response?.data?.data?.content)
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+    } = useInfiniteQuery({
+        queryKey: KEYS.product_list,
+        initialPageParam: 1,
+        queryFn: ({ pageParam = 1 }) => fetchData(pageParam),
+        getNextPageParam: (lastPage, allPages) => {
+            return allPages.length + 1
+        },
+    });
+
+    const productList = get(data,'pages')?.map((products) => (
+        get(products,'data.data.content')?.map((product) => {
+            return <Product product={product} key={get(product,'id')} userId={userId} lang={lang}/>
+        })
+    ))
+    console.log(get(data,'pages'),'get(data,\'pages\')')
     const changeLang = () => {
         localStorage.setItem('lang', lang);
         i18n.changeLanguage(lang)
@@ -34,80 +60,34 @@ const HomePage = () => {
     useEffect(() => {
         changeLang();
     }, []);
+
+    // useEffect(() => {
+    //     get(data,'pages')?.map((res) => {
+    //         setProductList((prevProductList) => {
+    //             return [...prevProductList,get(res,'data.data.content')];
+    //         })
+    //     })
+    // }, [get(data,'pages')]);
     return (
         <Container>
             <Space style={{width: "100%"}} direction={"vertical"}>
-                <Row gutter={[10,10]}>
-                    {
-                        get(categoriesData,'data.data')?.map((item) => (
-                            <Col xs={{span: 8}} sm={{span: 6}} key={get(item,'id')} style={{textAlign: "center"}}>
-                                <Link
-                                    activeClass="active"
-                                    to={get(item,'name')}
-                                    smooth={true}
-                                    isDynamic={true}
-                                    offset={-50}
-                                    ignoreCancelEvents={false}
-                                >
-                                    <div style={{
-                                        height: 100,
-                                        backgroundImage: `url(${get(item,'imageUrl')})`,
-                                        backgroundPosition: "center center",
-                                        backgroundSize: "cover",
-                                        borderRadius: "20px"
-                                    }}>
-                                    </div>
-                                    <Text>{get(item,'name')}</Text>
-                                </Link>
-                            </Col>
-                        ))
-                    }
-                </Row>
-                <Carousel autoplay>
-                    {
-                        get(bannerData, 'data.data')?.map((item) => (
-                            <div key={get(item,'id')}>
-                                <div style={{
-                                    height: 200,
-                                    backgroundImage: `url(${get(item, 'imageUrl')})`,
-                                    backgroundPosition: "center center",
-                                    backgroundSize: "cover",
-                                }}>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </Carousel>
                 <AffixContainer>
-                    <Space>
-                        {
-                            get(categoriesData,'data.data')?.map((item) => (
-                                <Link
-                                    key={get(item,'id')}
-                                    activeClass="active"
-                                    to={get(item,'name')}
-                                    smooth
-                                    spy
-                                    offset={-50}
-                                >
-                                    <Button type={"text"}>{get(item,'name')}</Button>
-                                </Link>
-                            ))
-                        }
-                    </Space>
+                    <Input
+                        prefix={<SearchOutlined />}
+                        suffix={<FilterOutlined />}
+                        style={{width: "100%"}}
+                    />
                 </AffixContainer>
-                <div>
-                    {
-                        get(categoriesData,'data.data',[])?.map((item) => {
-                            return <ProductContainer category={item} key={get(item,'id')} userId={userId} lang={lang}/>
-                        })
-                    }
-                </div>
+                <InfiniteScroll
+                    dataLength={get(data,'data.data',[])?.length}
+                    next={fetchNextPage}
+                    hasMore={hasNextPage}
+                    loader={<h4>Loading...</h4>}
+                >
+                    {productList}
+                </InfiniteScroll>
             </Space>
-            <FloatButton.Group>
-                <FloatButton onClick={() => navigate(`/basket/${userId}/${lang}`)} icon={<ShoppingCartOutlined />} />
-                <FloatButton.BackTop />
-            </FloatButton.Group>
+            <button onClick={() => fetchNextPage()}>load more</button>
         </Container>
     );
 };
