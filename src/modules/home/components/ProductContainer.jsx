@@ -13,7 +13,7 @@ import cash from '../../../assets/icons/cash.svg'
 import document from '../../../assets/icons/document.svg'
 import industry from '../../../assets/icons/industry.svg'
 import groupUser from '../../../assets/icons/group_user.svg'
-import recycle from '../../../assets/icons/recycle_repeat.svg'
+// import recycle from '../../../assets/icons/recycle_repeat.svg'
 
 const ProductDiv = styled.div`
     border: 3px solid rgba(197, 197, 197, 0.45);
@@ -43,20 +43,20 @@ const Product = ({product,userId,lang}) => {
         <ProductDiv>
             <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
                 <Flex justify={"space-between"} align={"center"}>
-                    <Title level={3}>{get(product,'name')}</Title>
+                    <Title level={4}>{get(product,'name')}</Title>
                     <div>
-                        <Title level={3}>{get(product,'price')}</Title>
+                        <Title level={4}>{get(product,'price')}</Title>
                         <Text>{get(product,'priceUpdatedTime')}</Text>
                     </div>
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>
                     <Space>
                         <img src={globe} width={25} height={25}/>
-                        <Title level={4}>{get(product,'country')}</Title>
+                        <Title level={5}>{get(product,'country')}</Title>
                     </Space>
                     <Space>
                         <img src={industry} width={25} height={25}/>
-                        <Title level={4}>{get(product,'manufacturer')}</Title>
+                        <Title level={5}>{get(product,'manufacturer')}</Title>
                     </Space>
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>
