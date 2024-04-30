@@ -13,10 +13,10 @@ const CustomTheme = {
         body: `'Montserrat', sans-serif`,
     },
     token: {
-        colorPrimary: '#0fcc28',
+        colorPrimary: '#414bb2',
         borderRadius: '5px',
         fontSize: 16,
-        fontSizeHeading5: 16
+        fontSizeHeading5: 16,
     },
 }
 
@@ -31,24 +31,6 @@ const GlobalStyles = createGlobalStyle`
         max-width: 600px;
         margin: 0 auto;
         min-height: 100vh;
-    }
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
-    .active button {
-        background-color: #0fcc28;
-        color: #fff;
-        font-weight: 500;
-    }
-    .ant-card-cover {
-        margin-top: 0 !important;
-        margin-inline-start: 0 !important;
-        margin-inline-end: 0 !important;
     }
 `
 const Theme = ({ children }) => {

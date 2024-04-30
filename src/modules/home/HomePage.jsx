@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Space, Typography} from "antd";
+import {Affix, Input, Space, Typography} from "antd";
 import Container from "../../components/Container.jsx";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
@@ -9,8 +9,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import Product from "./components/ProductContainer.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useInfiniteQuery} from "react-query";
-import {request} from "../../services/api/index.js";
-import AffixContainer from "../../components/AffixContainer.jsx";
+import filter from '../../assets/icons/filter.svg'
 import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import axios from "axios";
 import config from "../../config.js";
@@ -22,37 +21,26 @@ const HomePage = () => {
     const {lang,userId} = useParams();
     const [params,setParams] = useState({})
 
-    const fetchData = (pageParam) => {
-        axios({
-            method: "get",
-            baseURL: config.API_ROOT,
-            url: `${URLS.product_list}/${userId}`,
-            params: {...params, page: pageParam},
-        }).then(response => {
-            console.log(response?.data?.data?.content)
-        }).catch(error => {
-            console.error('Error fetching data:', error);
-        });
-    }
     const {
         data,
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery({
-        queryKey: KEYS.product_list,
-        initialPageParam: 1,
-        queryFn: ({ pageParam = 1 }) => fetchData(pageParam),
+        queryKey: [KEYS.product_list],
+        initialPageParam: 0,
+        queryFn: ({ pageParam = 0 }) => axios({
+            method: "get",
+            baseURL: config.API_ROOT,
+            url: `${URLS.product_list}/${userId}`,
+            params: {...params, page: pageParam},
+        })
+            .then(response => response?.data?.data?.content)
+            .catch(error => console.error('Error fetching data:', error)),
         getNextPageParam: (lastPage, allPages) => {
-            return allPages.length + 1
+            return allPages.length
         },
     });
 
-    const productList = get(data,'pages')?.map((products) => (
-        get(products,'data.data.content')?.map((product) => {
-            return <Product product={product} key={get(product,'id')} userId={userId} lang={lang}/>
-        })
-    ))
-    console.log(get(data,'pages'),'get(data,\'pages\')')
     const changeLang = () => {
         localStorage.setItem('lang', lang);
         i18n.changeLanguage(lang)
@@ -60,34 +48,33 @@ const HomePage = () => {
     useEffect(() => {
         changeLang();
     }, []);
-
-    // useEffect(() => {
-    //     get(data,'pages')?.map((res) => {
-    //         setProductList((prevProductList) => {
-    //             return [...prevProductList,get(res,'data.data.content')];
-    //         })
-    //     })
-    // }, [get(data,'pages')]);
     return (
         <Container>
             <Space style={{width: "100%"}} direction={"vertical"}>
-                <AffixContainer>
+                <Affix offsetTop={10}>
                     <Input
                         prefix={<SearchOutlined />}
                         suffix={<FilterOutlined />}
                         style={{width: "100%"}}
+                        size={"large"}
+                        placeholder="Search"
                     />
-                </AffixContainer>
+                </Affix>
                 <InfiniteScroll
-                    dataLength={get(data,'data.data',[])?.length}
-                    next={fetchNextPage}
+                    dataLength={data ? data.pages.flat().length : 0}
+                    next={() => fetchNextPage()}
                     hasMore={hasNextPage}
-                    loader={<h4>Loading...</h4>}
+                    loader={<h4></h4>}
+                    style={{width: "100%"}}
+                    hasChildren={false}
                 >
-                    {productList}
+                    <Space style={{width: "100%"}} direction={"vertical"}>
+                        {get(data,'pages',[])?.flat().map((product) =>
+                            <Product product={product} key={get(product,'id')} userId={userId} lang={lang}/>
+                        )}
+                    </Space>
                 </InfiniteScroll>
             </Space>
-            <button onClick={() => fetchNextPage()}>load more</button>
         </Container>
     );
 };

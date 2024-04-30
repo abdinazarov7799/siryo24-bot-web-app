@@ -2,20 +2,26 @@ import React from 'react';
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
 import {URLS} from "../../../constants/url.js";
 import {KEYS} from "../../../constants/key.js";
-import {get, isArray,isEqual, isNil} from "lodash";
-import {Button, Card, Col, Flex, Input, Row, Space, Spin, Typography} from "antd";
+import {get,} from "lodash";
+import {Button, Flex, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
-import useStore from "../../../services/store/useStore.jsx";
 import {useNavigate} from "react-router-dom";
-import {Element} from "react-scroll"
+import styled from "styled-components";
 const {Title,Text} = Typography;
+import globe from '../../../assets/icons/globe.svg'
+import cash from '../../../assets/icons/cash.svg'
+import document from '../../../assets/icons/document.svg'
+import industry from '../../../assets/icons/industry.svg'
+import groupUser from '../../../assets/icons/group_user.svg'
+import recycle from '../../../assets/icons/recycle_repeat.svg'
 
-const body = {
-    padding: 6
-}
+const ProductDiv = styled.div`
+    border: 3px solid rgba(197, 197, 197, 0.45);
+    border-radius: 15px;
+    padding: 10px;
+`
 const Product = ({product,userId,lang}) => {
     const {t} = useTranslation();
-    const {orders,increment,decrement} = useStore();
     const navigate = useNavigate();
     const {data,isLoading} = useGetOneQuery({
         id: get(product,'id'),
@@ -34,22 +40,37 @@ const Product = ({product,userId,lang}) => {
     }
 
     return (
-        <Card
-            hoverable
-            styles={{body}}
-        >
-            <Space direction={"vertical"} style={{width: "100%"}}>
-                <Text>{get(product,'seller')}</Text>
-                <Text>{get(product,'acceptCash')}</Text>
-                <Text>{get(product,'acceptTransfer')}</Text>
-                <Text>{get(product,'favourite')}</Text>
-                <Text>{get(product,'name')}</Text>
-                <Text>{get(product,'country')}</Text>
-                <Text>{get(product,'manufacturer')}</Text>
-                <Text>{get(product,'price')}</Text>
-                <Text>{get(product,'priceUpdatedTime')}</Text>
+        <ProductDiv>
+            <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
+                <Flex justify={"space-between"} align={"center"}>
+                    <Title level={3}>{get(product,'name')}</Title>
+                    <div>
+                        <Title level={3}>{get(product,'price')}</Title>
+                        <Text>{get(product,'priceUpdatedTime')}</Text>
+                    </div>
+                </Flex>
+                <Flex justify={"space-between"} align={"center"}>
+                    <Space>
+                        <img src={globe} width={25} height={25}/>
+                        <Title level={4}>{get(product,'country')}</Title>
+                    </Space>
+                    <Space>
+                        <img src={industry} width={25} height={25}/>
+                        <Title level={4}>{get(product,'manufacturer')}</Title>
+                    </Space>
+                </Flex>
+                <Flex justify={"space-between"} align={"center"}>
+                    <Space>
+                        <img src={groupUser} width={25} height={25}/>
+                        <Title level={5}>{t("Sotuvchi: ")} {get(product,'seller')}</Title>
+                    </Space>
+                    <Space>
+                        <img src={cash} width={25} height={25}/>
+                        <img src={document} width={25} height={25}/>
+                    </Space>
+                </Flex>
             </Space>
-        </Card>
+        </ProductDiv>
     );
 };
 
