@@ -9,7 +9,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import Product from "./components/ProductContainer.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useInfiniteQuery} from "react-query";
-import filter from '../../assets/icons/filter.svg'
 import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import axios from "axios";
 import config from "../../config.js";
