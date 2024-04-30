@@ -8,6 +8,7 @@ const Router = ({ ...rest }) => {
     const {tg} = useTelegram();
     useEffect(() => {
         tg.ready();
+        tg.expand();
     }, [])
   return (
     <BrowserRouter>

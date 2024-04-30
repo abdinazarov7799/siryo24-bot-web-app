@@ -32,6 +32,9 @@ const GlobalStyles = createGlobalStyle`
         margin: 0 auto;
         min-height: 100vh;
     }
+    h1,h2,h3,h4,h5,h6 {
+        margin: 0!important;
+    }
 `
 const Theme = ({ children }) => {
 
