@@ -3,7 +3,7 @@ import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
 import {URLS} from "../../../constants/url.js";
 import {KEYS} from "../../../constants/key.js";
 import {get,} from "lodash";
-import {Button, Flex, Space, Spin, Typography} from "antd";
+import {Flex, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
@@ -38,7 +38,6 @@ const Product = ({product,userId,lang}) => {
     if (isLoading) {
         return <Flex justify={"center"} style={{marginTop: 10}}><Spin /></Flex>
     }
-
     return (
         <ProductDiv>
             <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
@@ -51,22 +50,22 @@ const Product = ({product,userId,lang}) => {
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>
                     <Space>
-                        <img src={globe} width={25} height={25}/>
+                        <img src={globe} width={20} height={20}/>
                         <Title level={5}>{get(product,'country')}</Title>
                     </Space>
                     <Space>
-                        <img src={industry} width={25} height={25}/>
+                        <img src={industry} width={20} height={20}/>
                         <Title level={5}>{get(product,'manufacturer')}</Title>
                     </Space>
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>
                     <Space>
-                        <img src={groupUser} width={25} height={25}/>
+                        <img src={groupUser} width={20} height={20}/>
                         <Title level={5}>{t("Sotuvchi: ")} {get(product,'seller')}</Title>
                     </Space>
                     <Space>
-                        <img src={cash} width={25} height={25}/>
-                        <img src={document} width={25} height={25}/>
+                        <img src={cash} width={20} height={20}/>
+                        <img src={document} width={20} height={20}/>
                     </Space>
                 </Flex>
             </Space>
