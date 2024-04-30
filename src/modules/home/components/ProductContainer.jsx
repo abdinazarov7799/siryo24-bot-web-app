@@ -5,7 +5,6 @@ import {KEYS} from "../../../constants/key.js";
 import {get,} from "lodash";
 import {Flex, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 const {Title,Text} = Typography;
 import globe from '../../../assets/icons/globe.svg'
@@ -13,16 +12,42 @@ import cash from '../../../assets/icons/cash.svg'
 import document from '../../../assets/icons/document.svg'
 import industry from '../../../assets/icons/industry.svg'
 import groupUser from '../../../assets/icons/group_user.svg'
-// import recycle from '../../../assets/icons/recycle_repeat.svg'
+import recycle from '../../../assets/icons/recycle_repeat.svg'
+import noLiked from '../../../assets/icons/heart.svg'
+import liked from '../../../assets/icons/heart_filled.svg'
+import usePostQuery from "../../../hooks/api/usePostQuery.js";
 
 const ProductDiv = styled.div`
     border: 3px solid rgba(197, 197, 197, 0.45);
     border-radius: 15px;
     padding: 10px;
+    position: relative;
+    margin-top: 5px;
+`
+const ElementDiv = styled.div`
+    position: absolute;
+    display: flex;
+    right: 10px;
+    top: -17px;
+    & div {
+        width: 30px;
+        height: 30px;
+        background-color: #d9d9d9;
+        border-radius: 50%;
+        margin-right: 10px;
+        & img {
+            margin: 2.5px
+        }
+        & span {
+            position: absolute;
+            font-size: 12px;
+            top: 8px;
+            left: 12px;
+        }
+    }
 `
 const Product = ({product,userId,lang}) => {
     const {t} = useTranslation();
-    const navigate = useNavigate();
     const {data,isLoading} = useGetOneQuery({
         id: get(product,'id'),
         url: URLS.product_get_by_id,
@@ -34,12 +59,36 @@ const Product = ({product,userId,lang}) => {
         },
         enabled: false
     })
+    const {mutate} = usePostQuery({
+        listKeyId: KEYS.product_list,
+        hideSuccessToast: true
+    })
+
+    const addRemoveFavorities = (id,add) => {
+        mutate({
+            url: `${URLS.product_add_remove_favorites}/${id}/${userId}?add=${add}`,
+        })
+    }
 
     if (isLoading) {
         return <Flex justify={"center"} style={{marginTop: 10}}><Spin /></Flex>
     }
     return (
         <ProductDiv>
+            <ElementDiv>
+                <div>
+                    <span>{get(product,'analogsCount')}</span>
+                    <img src={recycle} width={25} height={25}/>
+                </div>
+                <div>
+                    <img
+                        src={get(product,'favourite') ? liked : noLiked}
+                        width={25}
+                        height={25}
+                        onClick={() => addRemoveFavorities(get(product,'id'),!get(product,'favourite'))}
+                    />
+                </div>
+            </ElementDiv>
             <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
                 <Flex justify={"space-between"} align={"center"}>
                     <Title level={4}>{get(product,'name')}</Title>
@@ -49,23 +98,23 @@ const Product = ({product,userId,lang}) => {
                     </div>
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>
-                    <Space>
-                        <img src={globe} width={20} height={20}/>
+                    <Flex>
+                        <img src={globe} width={20} height={20} style={{margin: "auto 5px auto 0"}}/>
                         <Title level={5}>{get(product,'country')}</Title>
-                    </Space>
-                    <Space>
-                        <img src={industry} width={20} height={20}/>
+                    </Flex>
+                    <Flex>
+                        <img src={industry} width={20} height={20} style={{margin: "auto 5px auto 0"}}/>
                         <Title level={5}>{get(product,'manufacturer')}</Title>
-                    </Space>
+                    </Flex>
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>
-                    <Space>
-                        <img src={groupUser} width={20} height={20}/>
+                    <Flex>
+                        <img src={groupUser} width={20} height={20} style={{margin: "auto 5px auto 0"}}/>
                         <Title level={5}>{t("Sotuvchi: ")} {get(product,'seller')}</Title>
-                    </Space>
+                    </Flex>
                     <Space>
-                        <img src={cash} width={20} height={20}/>
-                        <img src={document} width={20} height={20}/>
+                        {get(product,'acceptCash') && <img src={cash} width={20} height={20}/>}
+                        {get(product,'acceptTransfer') && <img src={document} width={20} height={20}/>}
                     </Space>
                 </Flex>
             </Space>

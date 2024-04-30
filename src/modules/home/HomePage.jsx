@@ -64,10 +64,10 @@ const HomePage = () => {
                     next={() => fetchNextPage()}
                     hasMore={hasNextPage}
                     loader={<h4></h4>}
-                    style={{width: "100%"}}
+                    style={{width: "100%", paddingTop: 15}}
                     hasChildren={false}
                 >
-                    <Space style={{width: "100%"}} direction={"vertical"}>
+                    <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
                         {get(data,'pages',[])?.flat().map((product) =>
                             <Product product={product} key={get(product,'id')} userId={userId} lang={lang}/>
                         )}
