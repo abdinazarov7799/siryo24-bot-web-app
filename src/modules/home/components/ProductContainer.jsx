@@ -80,12 +80,11 @@ const Product = ({product,userId,lang}) => {
                     <span>{get(product,'analogsCount')}</span>
                     <img src={recycle} width={25} height={25}/>
                 </div>
-                <div>
+                <div onClick={() => addRemoveFavorities(get(product,'id'),!get(product,'favourite'))}>
                     <img
                         src={get(product,'favourite') ? liked : noLiked}
                         width={25}
                         height={25}
-                        onClick={() => addRemoveFavorities(get(product,'id'),!get(product,'favourite'))}
                     />
                 </div>
             </ElementDiv>

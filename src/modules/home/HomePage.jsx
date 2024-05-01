@@ -1,24 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {Affix, Input, Space, Typography} from "antd";
+import {Space} from "antd";
 import Container from "../../components/Container.jsx";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import Product from "./components/ProductContainer.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useInfiniteQuery} from "react-query";
-import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import axios from "axios";
 import config from "../../config.js";
-const {Text} = Typography
+import HomeHeader from "./components/HomeHeader.jsx";
 
 const HomePage = () => {
-    const {t,i18n} = useTranslation();
-    const navigate = useNavigate();
+    const {i18n} = useTranslation();
     const {lang,userId} = useParams();
     const [params,setParams] = useState({})
+    const [open, setOpen] = useState(false);
 
     const {
         data,
@@ -50,15 +49,7 @@ const HomePage = () => {
     return (
         <Container>
             <Space style={{width: "100%"}} direction={"vertical"}>
-                <Affix offsetTop={10}>
-                    <Input
-                        prefix={<SearchOutlined />}
-                        suffix={<FilterOutlined />}
-                        style={{width: "100%"}}
-                        size={"large"}
-                        placeholder="Search"
-                    />
-                </Affix>
+                <HomeHeader open={open} setOpen={setOpen} params={params} setParams={setParams} userId={userId}/>
                 <InfiniteScroll
                     dataLength={data ? data.pages.flat().length : 0}
                     next={() => fetchNextPage()}
