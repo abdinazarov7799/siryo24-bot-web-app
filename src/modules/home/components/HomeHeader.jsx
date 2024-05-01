@@ -1,5 +1,5 @@
 import React from 'react';
-import {Affix, Button, Drawer, Flex, Input, Select, Space, Switch, Typography} from "antd";
+import {Affix, Button, Cascader, Drawer, Flex, Input, Select, Space, Switch, TreeSelect, Typography} from "antd";
 import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import {KEYS} from "../../../constants/key.js";
@@ -35,6 +35,88 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
         url: URLS.get_manufacturer,
         enabled: open
     })
+    const options = [
+        {
+            value: 'zhejiang',
+            label: 'Zhejiang',
+            children: [
+                {
+                    value: 'hangzhou',
+                    label: 'Hangzhou',
+                    children: [
+                        {
+                            value: 'xihu',
+                            label: 'West Lake',
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            value: 'jiangsu',
+            label: 'Jiangsu',
+            children: [
+                {
+                    value: 'nanjing',
+                    label: 'Nanjing',
+                    children: [
+                        {
+                            value: 'zhonghuamen',
+                            label: 'Zhong Hua Men',
+                        },
+                    ],
+                },
+            ],
+        },
+    ];
+    const treeData = [
+        {
+            value: 'parent 1',
+            title: 'parent 1',
+            children: [
+                {
+                    value: 'parent 1-0',
+                    title: 'parent 1-0',
+                },
+                {
+                    value: 'parent 1-1',
+                    title: 'parent 1-1',
+                },
+            ],
+        },{
+            value: 'parent 1',
+            title: 'parent 1',
+            children: [
+                {
+                    value: 'parent 1-0',
+                    title: 'parent 1-0',
+                },
+                {
+                    value: 'parent 1-1',
+                    title: 'parent 1-1',
+                },{
+                    value: 'parent 1-2',
+                    title: 'parent 1-2',
+                },{
+                    value: 'parent 1-3',
+                    title: 'parent 1-3',
+                },
+            ],
+        },{
+            value: 'parent 1',
+            title: 'parent 1',
+            children: [
+                {
+                    value: 'parent 1-0',
+                    title: 'parent 1-0',
+                },
+                {
+                    value: 'parent 1-1',
+                    title: 'parent 1-1',
+                },
+            ],
+        },
+    ];
     return (
         <>
             <Affix offsetTop={10}>
@@ -59,6 +141,21 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         placeholder="Search"
                         style={{width: "100%"}}
                     />
+                    <TreeSelect
+                        showSearch
+                        style={{
+                            width: '100%',
+                        }}
+                        dropdownStyle={{
+                            maxHeight: 400,
+                            overflow: 'auto',
+                        }}
+                        placeholder="Please select"
+                        allowClear
+                        treeDefaultExpandAll
+                        treeData={treeData}
+                    />
+                    <Cascader options={options} placeholder="Please select" />;
                     <Select
                         allowClear
                         placeholder={t("Kategoriya")}
