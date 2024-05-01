@@ -42,7 +42,6 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                     prefix={<SearchOutlined />}
                     suffix={<FilterOutlined onClick={() => setOpen(!open)} />}
                     style={{width: "100%"}}
-                    size={"large"}
                     placeholder="Search"
                 />
             </Affix>
@@ -57,7 +56,6 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                     <Input
                         prefix={<SearchOutlined />}
                         suffix={<FilterOutlined onClick={() => setOpen(!open)} />}
-                        size={"large"}
                         placeholder="Search"
                         style={{width: "100%"}}
                     />
@@ -65,7 +63,6 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         allowClear
                         placeholder={t("Kategoriya")}
                         loading={isLoadingCategories}
-                        size={"large"}
                         style={{width: "100%"}}
                         options={get(categories,'data.data')?.map((item) => {
                             return {
@@ -78,7 +75,6 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         allowClear
                         placeholder={t("Mamlakat")}
                         loading={isLoadingCountries}
-                        size={"large"}
                         style={{width: "100%"}}
                         options={get(countries,'data.data')?.map((item) => {
                             return {
@@ -91,7 +87,6 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         allowClear
                         placeholder={t("Ishlab chiqaruvchi")}
                         loading={isLoadingManufacturers}
-                        size={"large"}
                         style={{width: "100%"}}
                         options={get(manufacturers,'data.data')?.map((item) => {
                             return {
@@ -104,7 +99,6 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         allowClear
                         placeholder={t("Sotuvchi")}
                         loading={isLoadingSellers}
-                        size={"large"}
                         style={{width: "100%"}}
                         options={get(sellers,'data.data')?.map((item) => {
                             return {
@@ -114,10 +108,10 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         })}
                     />
                     <Flex align={"center"} justify={"space-between"}>
-                        <Title level={3}>{t("Birja")}</Title>
+                        <Title level={4}>{t("Birja")}</Title>
                         <Switch />
                     </Flex>
-                    <Button type="primary" block size={"large"}>
+                    <Button type="primary" block>
                         {t("Filterlash")}
                     </Button>
                 </Space>
