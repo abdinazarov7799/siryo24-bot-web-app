@@ -8,4 +8,7 @@ export const URLS = {
     get_manufacturer: "/api/filter-web/get-manufacturer",
     get_seller: "/api/filter-web/get-seller",
     get_product_name: "/api/filter-web/get-product-name",
+    get_application: "/api/application-web/get-all",
+    add_application: "/api/application-web/add",
+    delete_application: "/api/application-web/delete",
 }

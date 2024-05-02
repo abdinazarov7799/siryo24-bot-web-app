@@ -7,6 +7,7 @@ import {get} from "lodash";
 import {KEYS} from "../../constants/key.js";
 import MyApplication from "./MyApplication.jsx";
 import AllApplication from "./AllApplication.jsx";
+import Container from "../../components/Container.jsx";
 const {Title} = Typography;
 
 const ApplicationPage = () => {
@@ -17,33 +18,31 @@ const ApplicationPage = () => {
         {
             key: '1',
             label: t("Mening buyurtmalarim"),
-            children: <MyApplication />
+            children: <MyApplication userId={userId}/>
         },
         {
             key: '2',
             label: t("Barcha buyurtmalar"),
-            children: <AllApplication />
+            children: <AllApplication userId={userId}/>
         }
     ]
     return (
-        <>
-            <Button
-                icon={<LeftOutlined />}
-                type="primary"
-                onClick={()=> navigate(`/catalog/${userId}/${lang}`)}
-                style={{position: "absolute", top: 5}}
-            >
-                {t("Back")}
-            </Button>
+        <Container>
             <Space direction="vertical" style={{width:'100%'}}>
-                <Flex justify={"center"}>
-                    <Title level={2}>{t("Buyurtmalar")}</Title>
+                <Flex justify={"space-between"} align={"center"}>
+                    <Button
+                        icon={<LeftOutlined />}
+                        type="primary"
+                        onClick={()=> navigate(`/catalog/${userId}/${lang}`)}
+                    />
+                    <Title level={3}>{t("Buyurtmalar")}</Title>
+                    <div></div>
                 </Flex>
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
                     <Tabs defaultActiveKey="1" items={items} centered/>
                 </Space>
             </Space>
-        </>
+        </Container>
     );
 };
 

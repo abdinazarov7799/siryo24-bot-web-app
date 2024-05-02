@@ -8,6 +8,7 @@ import useGetOneQuery from "../../hooks/api/useGetOneQuery.js";
 import {get} from "lodash";
 import Product from "../../components/ProductContainer.jsx";
 import {LeftOutlined} from "@ant-design/icons";
+import Container from "../../components/Container.jsx";
 const {Title} = Typography;
 
 const SavedPage = () => {
@@ -26,18 +27,16 @@ const SavedPage = () => {
         }
     })
     return (
-        <>
-            <Button
-                icon={<LeftOutlined />}
-                type="primary"
-                onClick={()=> navigate(`/catalog/${userId}/${lang}`)}
-                style={{position: "absolute", top: 5}}
-            >
-                {t("Back")}
-            </Button>
+        <Container>
             <Space direction="vertical" style={{width:'100%'}}>
-                <Flex justify={"center"}>
-                    <Title level={2}>{t("Sevimlilar")}</Title>
+                <Flex justify={"space-between"} align={"center"}>
+                    <Button
+                        icon={<LeftOutlined />}
+                        type="primary"
+                        onClick={()=> navigate(`/catalog/${userId}/${lang}`)}
+                    />
+                    <Title level={3}>{t("Sevimlilar")}</Title>
+                    <div></div>
                 </Flex>
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
                     {get(data,'data.data.content',[])?.map((product) =>
@@ -51,7 +50,7 @@ const SavedPage = () => {
                     )}
                 </Space>
             </Space>
-        </>
+        </Container>
     );
 };
 

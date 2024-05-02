@@ -2,7 +2,7 @@ import React from 'react';
 import useGetOneQuery from "../hooks/api/useGetOneQuery.js";
 import {URLS} from "../constants/url.js";
 import {KEYS} from "../constants/key.js";
-import {get,} from "lodash";
+import {get, isEqual,} from "lodash";
 import {Flex, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import styled from "styled-components";
@@ -92,7 +92,11 @@ const Product = ({product,userId,lang,listKeyId}) => {
                 <Flex justify={"space-between"} align={"center"}>
                     <Title level={4}>{get(product,'name')}</Title>
                     <div style={{textAlign: "end"}}>
-                        <Title level={4}>{get(product,'price')}</Title>
+                        {
+                            isEqual(get(product,'price'),0) ?
+                                <Title level={5}>{t(get(product,'status'))}</Title> :
+                                <Title level={4} type={"success"}>{get(product,'price')}</Title>
+                        }
                         <Text>{get(product,'priceUpdatedTime')}</Text>
                     </div>
                 </Flex>
