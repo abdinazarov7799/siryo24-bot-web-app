@@ -1,15 +1,18 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Affix, Button, Cascader, Drawer, Flex, Input, Select, Space, Switch, TreeSelect, Typography} from "antd";
 import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
-import {get} from "lodash";
+import {get, isNil} from "lodash";
+import axios from "axios";
+import config from "../../../config.js";
 const {Title} = Typography;
 
 const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
     const {t} = useTranslation();
+    const [treeData, setTreeData] = useState([]);
     const {data:categories,isLoadingCategories} = useGetAllQuery({
         key: KEYS.get_category,
         url: URLS.get_category,
@@ -35,88 +38,46 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
         url: URLS.get_manufacturer,
         enabled: open
     })
-    const options = [
-        {
-            value: 'zhejiang',
-            label: 'Zhejiang',
-            children: [
-                {
-                    value: 'hangzhou',
-                    label: 'Hangzhou',
-                    children: [
-                        {
-                            value: 'xihu',
-                            label: 'West Lake',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            value: 'jiangsu',
-            label: 'Jiangsu',
-            children: [
-                {
-                    value: 'nanjing',
-                    label: 'Nanjing',
-                    children: [
-                        {
-                            value: 'zhonghuamen',
-                            label: 'Zhong Hua Men',
-                        },
-                    ],
-                },
-            ],
-        },
-    ];
-    const treeData = [
-        {
-            value: 'parent 1',
-            title: 'parent 1',
-            children: [
-                {
-                    value: 'parent 1-0',
-                    title: 'parent 1-0',
-                },
-                {
-                    value: 'parent 1-1',
-                    title: 'parent 1-1',
-                },
-            ],
-        },{
-            value: 'parent 1',
-            title: 'parent 1',
-            children: [
-                {
-                    value: 'parent 1-0',
-                    title: 'parent 1-0',
-                },
-                {
-                    value: 'parent 1-1',
-                    title: 'parent 1-1',
-                },{
-                    value: 'parent 1-2',
-                    title: 'parent 1-2',
-                },{
-                    value: 'parent 1-3',
-                    title: 'parent 1-3',
-                },
-            ],
-        },{
-            value: 'parent 1',
-            title: 'parent 1',
-            children: [
-                {
-                    value: 'parent 1-0',
-                    title: 'parent 1-0',
-                },
-                {
-                    value: 'parent 1-1',
-                    title: 'parent 1-1',
-                },
-            ],
-        },
-    ];
+    useEffect(() => {
+        if (!isNil(get(categories,'data.data'))){
+            setTreeData(get(categories,'data.data')?.map((item) => {
+                return {
+                    id: get(item,'id'),
+                    title: get(item,'name'),
+                }
+            }))
+        }
+    }, [categories]);
+    const onLoadData = async ({id}) => {
+        try {
+            const response = await axios({
+                method: 'get',
+                baseURL: config.API_ROOT,
+                url: `${URLS.get_product_name}/${id}`,
+            });
+            const data = get(response,'data.data',[]);
+            const treeNodeData = data?.map(item => ({
+                id: get(item,'id'),
+                pId: id,
+                value: get(item,'id'),
+                title: get(item,'name'),
+                isLeaf: true
+            }));
+            setTreeData(treeData => {
+                return treeData.map(node => {
+                    if (node.id === id) {
+                        return {
+                            ...node,
+                            children: treeNodeData
+                        };
+                    }
+                    return node;
+                });
+            });
+        } catch (error) {
+            console.error('Error loading data:', error);
+        }
+    }
     return (
         <>
             <Affix offsetTop={10}>
@@ -143,19 +104,14 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                     />
                     <TreeSelect
                         showSearch
-                        style={{
-                            width: '100%',
-                        }}
-                        dropdownStyle={{
-                            maxHeight: 400,
-                            overflow: 'auto',
-                        }}
-                        placeholder="Please select"
+                        style={{ width: '100%' }}
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                        placeholder={t("Kategoriya")}
                         allowClear
-                        treeDefaultExpandAll
+                        treeDataSimpleMode
+                        loadData={onLoadData}
                         treeData={treeData}
                     />
-                    <Cascader options={options} placeholder="Please select" />;
                     <Select
                         allowClear
                         placeholder={t("Kategoriya")}
