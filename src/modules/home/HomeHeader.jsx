@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Affix, Button, Cascader, Drawer, Flex, Input, Select, Space, Switch, TreeSelect, Typography} from "antd";
 import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
-import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
-import {KEYS} from "../../../constants/key.js";
-import {URLS} from "../../../constants/url.js";
+import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
+import {KEYS} from "../../constants/key.js";
+import {URLS} from "../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import {get, isNil} from "lodash";
 import axios from "axios";
-import config from "../../../config.js";
+import config from "../../config.js";
 const {Title} = Typography;
 
 const HomeHeader = ({open,setOpen,params,setParams,userId}) => {

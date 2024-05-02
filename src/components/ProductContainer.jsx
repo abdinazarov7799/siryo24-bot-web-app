@@ -1,21 +1,21 @@
 import React from 'react';
-import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
-import {URLS} from "../../../constants/url.js";
-import {KEYS} from "../../../constants/key.js";
+import useGetOneQuery from "../hooks/api/useGetOneQuery.js";
+import {URLS} from "../constants/url.js";
+import {KEYS} from "../constants/key.js";
 import {get,} from "lodash";
 import {Flex, Space, Spin, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import styled from "styled-components";
 const {Title,Text} = Typography;
-import globe from '../../../assets/icons/globe.svg'
-import cash from '../../../assets/icons/cash.svg'
-import document from '../../../assets/icons/document.svg'
-import industry from '../../../assets/icons/industry.svg'
-import groupUser from '../../../assets/icons/group_user.svg'
-import recycle from '../../../assets/icons/recycle_repeat.svg'
-import noLiked from '../../../assets/icons/heart.svg'
-import liked from '../../../assets/icons/heart_filled.svg'
-import usePostQuery from "../../../hooks/api/usePostQuery.js";
+import globe from '../assets/icons/globe.svg'
+import cash from '../assets/icons/cash.svg'
+import document from '../assets/icons/document.svg'
+import industry from '../assets/icons/industry.svg'
+import groupUser from '../assets/icons/group_user.svg'
+import recycle from '../assets/icons/recycle_repeat.svg'
+import noLiked from '../assets/icons/heart.svg'
+import liked from '../assets/icons/heart_filled.svg'
+import usePostQuery from "../hooks/api/usePostQuery.js";
 
 const ProductDiv = styled.div`
     border: 3px solid rgba(197, 197, 197, 0.45);
@@ -46,7 +46,7 @@ const ElementDiv = styled.div`
         }
     }
 `
-const Product = ({product,userId,lang}) => {
+const Product = ({product,userId,lang,listKeyId}) => {
     const {t} = useTranslation();
     const {data,isLoading} = useGetOneQuery({
         id: get(product,'id'),
@@ -60,7 +60,7 @@ const Product = ({product,userId,lang}) => {
         enabled: false
     })
     const {mutate} = usePostQuery({
-        listKeyId: KEYS.product_list,
+        listKeyId,
         hideSuccessToast: true
     })
 
@@ -91,7 +91,7 @@ const Product = ({product,userId,lang}) => {
             <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
                 <Flex justify={"space-between"} align={"center"}>
                     <Title level={4}>{get(product,'name')}</Title>
-                    <div>
+                    <div style={{textAlign: "end"}}>
                         <Title level={4}>{get(product,'price')}</Title>
                         <Text>{get(product,'priceUpdatedTime')}</Text>
                     </div>

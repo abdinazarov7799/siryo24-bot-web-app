@@ -6,4 +6,5 @@ export const KEYS = {
     get_manufacturer: "get_manufacturer",
     get_seller: "get_seller",
     get_product_name: "get_product_name",
+    get_favorites: "get_favorites",
 }

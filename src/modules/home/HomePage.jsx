@@ -1,24 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {Space} from "antd";
+import {FloatButton, Space} from "antd";
 import Container from "../../components/Container.jsx";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
-import Product from "./components/ProductContainer.jsx";
+import {useNavigate, useParams} from "react-router-dom";
+import Product from "../../components/ProductContainer.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useInfiniteQuery} from "react-query";
 import axios from "axios";
 import config from "../../config.js";
-import HomeHeader from "./components/HomeHeader.jsx";
+import HomeHeader from "./HomeHeader.jsx";
+import {ShoppingCartOutlined} from "@ant-design/icons";
+import {FiBookmark} from "react-icons/fi";
 
 const HomePage = () => {
     const {i18n} = useTranslation();
     const {lang,userId} = useParams();
     const [params,setParams] = useState({})
     const [open, setOpen] = useState(false);
-
+    const navigate = useNavigate()
     const {
         data,
         fetchNextPage,
@@ -60,11 +62,32 @@ const HomePage = () => {
                 >
                     <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
                         {get(data,'pages',[])?.flat().map((product) =>
-                            <Product product={product} key={get(product,'id')} userId={userId} lang={lang}/>
+                            <Product
+                                product={product}
+                                key={get(product,'id')}
+                                userId={userId}
+                                lang={lang}
+                                listKeyId={KEYS.product_list}
+                            />
                         )}
                     </Space>
                 </InfiniteScroll>
             </Space>
+            <FloatButton.Group>
+                <FloatButton
+                    type={"primary"}
+                    onClick={() => navigate(`/application/${userId}/${lang}`)}
+                    icon={<ShoppingCartOutlined />}
+                    style={{transform: "scale(1.2)"}}
+                />
+                <FloatButton
+                    type={"primary"}
+                    onClick={() => navigate(`/saved/${userId}/${lang}`)}
+                    icon={<FiBookmark />}
+                    style={{transform: "scale(1.2)"}}
+                />
+                <FloatButton.BackTop style={{transform: "scale(1.2)", marginTop: 20}}/>
+            </FloatButton.Group>
         </Container>
     );
 };
