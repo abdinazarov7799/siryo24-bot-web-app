@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from "../../components/Container.jsx";
-import HomeFooter from "../home/HomeFooter.jsx";
+import Footer from "../../layouts/Footer.jsx";
 import {useParams} from "react-router-dom";
 import {Flex, Space, Typography} from "antd";
 import {useTranslation} from "react-i18next";
@@ -16,7 +16,7 @@ const ArchivePage = () => {
                     <Title level={3}>{t("Arxiv narxlar")}</Title>
                 </Flex>
             </Space>
-            <HomeFooter userId={userId} lang={lang}/>
+            <Footer userId={userId} lang={lang}/>
         </Container>
     );
 };

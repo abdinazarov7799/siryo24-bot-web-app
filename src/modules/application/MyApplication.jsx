@@ -183,8 +183,8 @@ const MyApplication = ({userId}) => {
                                 </Popconfirm>
                             </FixedElement>
                             <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
-                                <Row justify={"space-between"}>
-                                    <Space style={{display: "flex", flexWrap: "wrap", maxWidth: 300}}>
+                                <Row justify={"space-between"} style={{flexFlow: "nowrap"}}>
+                                    <Space style={{display: "flex", flexWrap: "wrap"}}>
                                         {
                                             get(item,'products',[])?.map((product,index)=> {
                                                 return <Title
@@ -197,8 +197,8 @@ const MyApplication = ({userId}) => {
                                             })
                                         }
                                     </Space>
-                                    <Col span={8} style={{textAlign: "end"}}>
-                                        <Space>
+                                    <Col style={{textAlign: "end"}}>
+                                        <Space style={{width: 150}}>
                                             <CalendarOutlined style={{fontSize: 16}}/>
                                             <Text>{get(item,'createdAt')}</Text>
                                         </Space>

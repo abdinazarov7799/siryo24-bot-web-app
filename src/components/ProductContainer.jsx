@@ -1,9 +1,7 @@
-import React from 'react';
-import useGetOneQuery from "../hooks/api/useGetOneQuery.js";
+import React, {useState} from 'react';
 import {URLS} from "../constants/url.js";
-import {KEYS} from "../constants/key.js";
 import {get, isEqual,} from "lodash";
-import {Flex, Space, Spin, Typography} from "antd";
+import {Flex, Modal, Row, Space, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import styled from "styled-components";
 const {Title,Text} = Typography;
@@ -16,6 +14,7 @@ import recycle from '../assets/icons/recycle_repeat.svg'
 import noLiked from '../assets/icons/heart.svg'
 import liked from '../assets/icons/heart_filled.svg'
 import usePostQuery from "../hooks/api/usePostQuery.js";
+import MoreInfoModal from "./MoreInfoModal.jsx";
 
 const ProductDiv = styled.div`
     border: 3px solid rgba(197, 197, 197, 0.45);
@@ -24,12 +23,19 @@ const ProductDiv = styled.div`
     position: relative;
     margin-top: 5px;
 `
+const AnalogsDiv = styled.div`
+    background-color: #f0f1f2;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+`
 const ElementDiv = styled.div`
     position: absolute;
     display: flex;
     right: 10px;
     top: -17px;
     & div {
+        cursor: pointer;
         width: 30px;
         height: 30px;
         background-color: #d9d9d9;
@@ -48,17 +54,9 @@ const ElementDiv = styled.div`
 `
 const Product = ({product,userId,lang,listKeyId}) => {
     const {t} = useTranslation();
-    const {data,isLoading} = useGetOneQuery({
-        id: get(product,'id'),
-        url: URLS.product_get_by_id,
-        key: `${KEYS.product_get_by_id}_${get(product,'id')}`,
-        params: {
-            params: {
-                user_id: userId
-            }
-        },
-        enabled: false
-    })
+    const [isOpen, setIsOpen] = useState(false);
+    const [isModalOpenAnalogs, setModalOpenAnalogs] = useState(false);
+
     const {mutate} = usePostQuery({
         listKeyId,
         hideSuccessToast: true
@@ -70,13 +68,43 @@ const Product = ({product,userId,lang,listKeyId}) => {
         })
     }
 
-    if (isLoading) {
-        return <Flex justify={"center"} style={{marginTop: 10}}><Spin /></Flex>
-    }
     return (
-        <ProductDiv>
+        <ProductDiv key={get(product,'id')} onClick={() => setIsOpen(true)}>
+            <MoreInfoModal
+                isModalOpen={isOpen}
+                setModalOpen={setIsOpen}
+                userId={userId}
+                product={product}
+            />
+            <Modal
+                key="analogs"
+                title={get(product,'name')}
+                open={isModalOpenAnalogs}
+                onCancel={() => setModalOpenAnalogs(false)}
+                footer={null}
+            >
+                {
+                    get(product,'analogs',[])?.map((analog) => {
+                        return (
+                            <AnalogsDiv>
+                                <Space direction={"vertical"} style={{width:'100%'}}>
+                                    <Row>
+                                        <Title level={3}>{get(analog, 'name')}</Title>
+                                    </Row>
+                                    <Row>
+                                        <Text strong>{t("Mamlakat")}: {get(analog,'country')}</Text>
+                                    </Row>
+                                    <Row>
+                                        <Text strong>{t("Kategoriya")}: {get(analog,'category')}</Text>
+                                    </Row>
+                                </Space>
+                            </AnalogsDiv>
+                        )
+                    })
+                }
+            </Modal>
             <ElementDiv>
-                <div>
+                <div onClick={() => setModalOpenAnalogs(true)}>
                     <span>{get(product,'analogsCount')}</span>
                     <img src={recycle} width={25} height={25}/>
                 </div>

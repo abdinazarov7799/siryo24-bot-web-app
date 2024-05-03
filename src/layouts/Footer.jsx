@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Flex, Space, theme, Typography} from "antd";
+import {Flex, theme, Typography} from "antd";
 import {
     FundOutlined,
     InfoCircleOutlined,
@@ -9,8 +9,10 @@ import {
 } from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {get, isEqual} from "lodash";
+import {useTelegram} from "../hooks/useTelegram.jsx";
 const {Text} = Typography;
-
+const {tg} = useTelegram()
 const buttonStyle = {
     display: "flex",
     flexDirection: "column",
@@ -19,13 +21,14 @@ const buttonStyle = {
     cursor: "pointer",
 }
 const buttonIconStyle = {
-    fontSize: 30
+    fontSize: 30,
+    color: !isEqual(get(tg,'colorScheme','light'),'light') && "#fff"
 }
 const buttonTextStyle = {
     fontSize: 12
 }
 
-const HomeFooter = ({userId,lang}) => {
+const Footer = ({userId,lang}) => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
@@ -83,4 +86,4 @@ const HomeFooter = ({userId,lang}) => {
     );
 };
 
-export default HomeFooter;
+export default Footer;

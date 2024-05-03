@@ -14,7 +14,7 @@ import config from "../../config.js";
 import HomeHeader from "./HomeHeader.jsx";
 import {ShoppingCartOutlined} from "@ant-design/icons";
 import {FiBookmark} from "react-icons/fi";
-import HomeFooter from "./HomeFooter.jsx";
+import Footer from "../../layouts/Footer.jsx";
 
 const HomePage = () => {
     const {i18n} = useTranslation();
@@ -63,22 +63,26 @@ const HomePage = () => {
                         hasChildren={false}
                     >
                         <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                            {get(data,'pages',[])?.flat().map((product) =>
-                                <Product
-                                    product={product}
-                                    key={get(product,'id')}
-                                    userId={userId}
-                                    lang={lang}
-                                    listKeyId={KEYS.product_list}
-                                />
+                            {get(data,'pages',[])?.flat().map((product,index) =>{
+                                return (
+                                    <Product
+                                        product={product}
+                                        key={get(product,'id')}
+                                        userId={userId}
+                                        lang={lang}
+                                        listKeyId={KEYS.product_list}
+                                        index={index}
+                                    />
+                                )
+                                }
                             )}
                         </Space>
                     </InfiniteScroll>
                 </Space>
                 <FloatButton.Group>
-                    <FloatButton.BackTop style={{transform: "scale(1.2)"}}/>
+                    <FloatButton.BackTop style={{transform: "scale(1.2)", marginBottom: 50}}/>
                 </FloatButton.Group>
-                <HomeFooter userId={userId} lang={lang}/>
+                <Footer userId={userId} lang={lang}/>
             </Container>
         </>
     );

@@ -11,8 +11,9 @@ import ArchivePage from "../modules/archive/ArchivePage.jsx";
 const Router = ({ ...rest }) => {
     const {tg} = useTelegram();
     useEffect(() => {
-        tg.ready();
-        tg.expand();
+        tg?.ready();
+        tg?.expand();
+        tg?.enableClosingConfirmation()
     }, [])
   return (
     <BrowserRouter>

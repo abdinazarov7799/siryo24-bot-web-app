@@ -71,7 +71,7 @@ const AllApplication = () => {
                                                 }
                                             </Flex>
                                         </Col>
-                                        <Col span={8} style={{textAlign: "end"}}>
+                                        <Col style={{textAlign: "end"}}>
                                             <Space>
                                                 <CalendarOutlined style={{fontSize: 16}}/>
                                                 <Text>{get(item,'createdAt')}</Text>
@@ -91,13 +91,12 @@ const AllApplication = () => {
                                             </Flex>
                                         </Col>
                                         <Col>
-                                            <Link href={`tel:${get(item,'phoneNumber')}`}>
-                                                <Button
-                                                    type="primary"
-                                                >
-                                                    {get(item,'user.phoneNumber')}
-                                                </Button>
-                                            </Link>
+                                            <Button
+                                                type="primary"
+                                                onClick={() => window.location.href = `tel:${get(item,'phoneNumber')}`}
+                                            >
+                                                {get(item,'user.phoneNumber')}
+                                            </Button>
                                         </Col>
                                     </Flex>
                                 </Space>

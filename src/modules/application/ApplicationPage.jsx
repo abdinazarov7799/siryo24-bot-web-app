@@ -5,7 +5,7 @@ import {Flex, Space, Tabs, Typography} from "antd";
 import MyApplication from "./MyApplication.jsx";
 import AllApplication from "./AllApplication.jsx";
 import Container from "../../components/Container.jsx";
-import HomeFooter from "../home/HomeFooter.jsx";
+import Footer from "../../layouts/Footer.jsx";
 const {Title} = Typography;
 
 const ApplicationPage = () => {
@@ -33,7 +33,7 @@ const ApplicationPage = () => {
                     <Tabs defaultActiveKey="1" items={items} centered/>
                 </Space>
             </Space>
-            <HomeFooter userId={userId} lang={lang}/>
+            <Footer userId={userId} lang={lang}/>
         </Container>
     );
 };

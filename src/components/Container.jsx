@@ -9,7 +9,7 @@ const Container = ({children}) => {
     return (
         <div style={{
             margin: "0 auto",
-            padding: 16,
+            padding: "16px 16px 90px 16px",
             borderRadius: 0,
             width: "100%",
             backgroundColor: colorBgContainer,

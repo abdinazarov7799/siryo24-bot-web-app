@@ -8,7 +8,7 @@ import useGetOneQuery from "../../hooks/api/useGetOneQuery.js";
 import {get} from "lodash";
 import Product from "../../components/ProductContainer.jsx";
 import Container from "../../components/Container.jsx";
-import HomeFooter from "../home/HomeFooter.jsx";
+import Footer from "../../layouts/Footer.jsx";
 const {Title} = Typography;
 
 const SavedPage = () => {
@@ -43,7 +43,7 @@ const SavedPage = () => {
                     )}
                 </Space>
             </Space>
-            <HomeFooter userId={userId} lang={lang}/>
+            <Footer userId={userId} lang={lang}/>
         </Container>
     );
 };
