@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Affix, Button, Cascader, Drawer, Flex, Input, Select, Space, Switch, TreeSelect, Typography} from "antd";
+import {Affix, Button, Cascader, Drawer, Flex, Form, Input, Select, Space, Switch, TreeSelect, Typography} from "antd";
 import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
 import {useTranslation} from "react-i18next";
-import {get, isNil} from "lodash";
+import {get, isEqual, isNil} from "lodash";
 import axios from "axios";
 import config from "../../config.js";
 const {Title} = Typography;
@@ -43,7 +43,10 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
             setTreeData(get(categories,'data.data')?.map((item) => {
                 return {
                     id: get(item,'id'),
+                    pId: 0,
+                    value: get(item,'id'),
                     title: get(item,'name'),
+                    disabled: true,
                 }
             }))
         }
@@ -57,22 +60,16 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
             });
             const data = get(response,'data.data',[]);
             const treeNodeData = data?.map(item => ({
-                id: get(item,'id'),
                 pId: id,
                 value: get(item,'id'),
                 title: get(item,'name'),
-                isLeaf: true
+                isLeaf: true,
             }));
-            setTreeData(treeData => {
-                return treeData.map(node => {
-                    if (node.id === id) {
-                        return {
-                            ...node,
-                            children: treeNodeData
-                        };
-                    }
-                    return node;
-                });
+            setTreeData(prevData => {
+                return [
+                    ...prevData,
+                    ...treeNodeData
+                ]
             });
         } catch (error) {
             console.error('Error loading data:', error);
@@ -93,81 +90,65 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                 closable={false}
                 key="input-filter"
                 open={open}
+                height={280}
                 onClose={() => setOpen(false)}
             >
-                <Space direction={"vertical"} style={{width: "100%"}}>
-                    <Input
-                        prefix={<SearchOutlined />}
-                        suffix={<FilterOutlined onClick={() => setOpen(!open)} />}
-                        placeholder="Search"
-                        style={{width: "100%"}}
-                    />
-                    <TreeSelect
-                        showSearch
-                        style={{ width: '100%' }}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        placeholder={t("Kategoriya")}
-                        allowClear
-                        treeDataSimpleMode
-                        loadData={onLoadData}
-                        treeData={treeData}
-                    />
-                    <Select
-                        allowClear
-                        placeholder={t("Kategoriya")}
-                        loading={isLoadingCategories}
-                        style={{width: "100%"}}
-                        options={get(categories,'data.data')?.map((item) => {
-                            return {
-                                value: get(item,'id'),
-                                label: get(item,'name')
-                            }
-                        })}
-                    />
-                    <Select
-                        allowClear
-                        placeholder={t("Mamlakat")}
-                        loading={isLoadingCountries}
-                        style={{width: "100%"}}
-                        options={get(countries,'data.data')?.map((item) => {
-                            return {
-                                value: item,
-                                label: item
-                            }
-                        })}
-                    />
-                    <Select
-                        allowClear
-                        placeholder={t("Ishlab chiqaruvchi")}
-                        loading={isLoadingManufacturers}
-                        style={{width: "100%"}}
-                        options={get(manufacturers,'data.data')?.map((item) => {
-                            return {
-                                value: item,
-                                label: item
-                            }
-                        })}
-                    />
-                    <Select
-                        allowClear
-                        placeholder={t("Sotuvchi")}
-                        loading={isLoadingSellers}
-                        style={{width: "100%"}}
-                        options={get(sellers,'data.data')?.map((item) => {
-                            return {
-                                value: item,
-                                label: item
-                            }
-                        })}
-                    />
-                    <Flex align={"center"} justify={"space-between"}>
-                        <Title level={4}>{t("Birja")}</Title>
-                        <Switch />
-                    </Flex>
-                    <Button type="primary" block>
-                        {t("Filterlash")}
-                    </Button>
-                </Space>
+                <Form>
+                    <Space direction={"vertical"} style={{width: "100%"}}>
+                        <TreeSelect
+                            treeDataSimpleMode
+                            style={{ width: '100%' }}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder={t("Kategoriya")}
+                            allowClear
+                            loadData={onLoadData}
+                            treeData={treeData}
+                        />
+                        <Select
+                            allowClear
+                            placeholder={t("Mamlakat")}
+                            loading={isLoadingCountries}
+                            style={{width: "100%"}}
+                            options={get(countries,'data.data')?.map((item) => {
+                                return {
+                                    value: item,
+                                    label: item
+                                }
+                            })}
+                        />
+                        <Select
+                            allowClear
+                            placeholder={t("Ishlab chiqaruvchi")}
+                            loading={isLoadingManufacturers}
+                            style={{width: "100%"}}
+                            options={get(manufacturers,'data.data')?.map((item) => {
+                                return {
+                                    value: item,
+                                    label: item
+                                }
+                            })}
+                        />
+                        <Select
+                            allowClear
+                            placeholder={t("Sotuvchi")}
+                            loading={isLoadingSellers}
+                            style={{width: "100%"}}
+                            options={get(sellers,'data.data')?.map((item) => {
+                                return {
+                                    value: item,
+                                    label: item
+                                }
+                            })}
+                        />
+                        <Flex align={"center"} justify={"space-between"}>
+                            <Title level={4}>{t("Birja")}</Title>
+                            <Switch />
+                        </Flex>
+                        <Button type="primary" block htmlType="submit">
+                            {t("Filterlash")}
+                        </Button>
+                    </Space>
+                </Form>
             </Drawer>
         </>
     );

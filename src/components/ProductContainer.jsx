@@ -97,7 +97,7 @@ const Product = ({product,userId,lang,listKeyId}) => {
                                 <Title level={5}>{t(get(product,'status'))}</Title> :
                                 <Title level={4} type={"success"}>{get(product,'price')}</Title>
                         }
-                        <Text>{get(product,'priceUpdatedTime')}</Text>
+                        <Text style={{fontSize: 11}}>{get(product,'priceUpdatedTime')}</Text>
                     </div>
                 </Flex>
                 <Flex justify={"space-between"} align={"center"}>

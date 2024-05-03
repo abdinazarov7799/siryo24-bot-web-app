@@ -14,6 +14,7 @@ import config from "../../config.js";
 import HomeHeader from "./HomeHeader.jsx";
 import {ShoppingCartOutlined} from "@ant-design/icons";
 import {FiBookmark} from "react-icons/fi";
+import HomeFooter from "./HomeFooter.jsx";
 
 const HomePage = () => {
     const {i18n} = useTranslation();
@@ -49,46 +50,37 @@ const HomePage = () => {
         changeLang();
     }, []);
     return (
-        <Container>
-            <Space style={{width: "100%"}} direction={"vertical"}>
-                <HomeHeader open={open} setOpen={setOpen} params={params} setParams={setParams} userId={userId}/>
-                <InfiniteScroll
-                    dataLength={data ? data.pages.flat().length : 0}
-                    next={() => fetchNextPage()}
-                    hasMore={hasNextPage}
-                    loader={<h4></h4>}
-                    style={{width: "100%", paddingTop: 15}}
-                    hasChildren={false}
-                >
-                    <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                        {get(data,'pages',[])?.flat().map((product) =>
-                            <Product
-                                product={product}
-                                key={get(product,'id')}
-                                userId={userId}
-                                lang={lang}
-                                listKeyId={KEYS.product_list}
-                            />
-                        )}
-                    </Space>
-                </InfiniteScroll>
-            </Space>
-            <FloatButton.Group>
-                <FloatButton
-                    type={"primary"}
-                    onClick={() => navigate(`/application/${userId}/${lang}`)}
-                    icon={<ShoppingCartOutlined />}
-                    style={{transform: "scale(1.2)"}}
-                />
-                <FloatButton
-                    type={"primary"}
-                    onClick={() => navigate(`/saved/${userId}/${lang}`)}
-                    icon={<FiBookmark />}
-                    style={{transform: "scale(1.2)"}}
-                />
-                <FloatButton.BackTop style={{transform: "scale(1.2)", marginTop: 20}}/>
-            </FloatButton.Group>
-        </Container>
+        <>
+            <Container>
+                <Space style={{width: "100%"}} direction={"vertical"}>
+                    <HomeHeader open={open} setOpen={setOpen} params={params} setParams={setParams} userId={userId}/>
+                    <InfiniteScroll
+                        dataLength={data ? data.pages.flat().length : 0}
+                        next={() => fetchNextPage()}
+                        hasMore={hasNextPage}
+                        loader={<h4></h4>}
+                        style={{width: "100%", paddingTop: 15}}
+                        hasChildren={false}
+                    >
+                        <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
+                            {get(data,'pages',[])?.flat().map((product) =>
+                                <Product
+                                    product={product}
+                                    key={get(product,'id')}
+                                    userId={userId}
+                                    lang={lang}
+                                    listKeyId={KEYS.product_list}
+                                />
+                            )}
+                        </Space>
+                    </InfiniteScroll>
+                </Space>
+                <FloatButton.Group>
+                    <FloatButton.BackTop style={{transform: "scale(1.2)"}}/>
+                </FloatButton.Group>
+                <HomeFooter userId={userId} lang={lang}/>
+            </Container>
+        </>
     );
 };
 
