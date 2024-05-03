@@ -18,17 +18,16 @@ const ElementDiv = styled.div`
 `
 
 const TabPhone = ({data}) => {
-    const handleClick = (phoneNumber) => {
-        window.location.href = `tel:${phoneNumber}`;
-    };
     return (
         <Space direction={"vertical"} style={{width:'100%'}}>
             {
                 !isNil(get(data, 'data.sellerPhone1')) && (
-                    <ElementDiv onClick={() => handleClick(get(data, 'data.sellerPhone1'))}>
-                        <Text>{get(data, 'data.sellerPhone1')}</Text>
-                        <PhoneOutlined />
-                    </ElementDiv>
+                    <a href={`tel:${get(data, 'data.sellerPhone1')}`} target={"_blank"}>
+                        <ElementDiv>
+                            <Text>{get(data, 'data.sellerPhone1')}</Text>
+                            <PhoneOutlined />
+                        </ElementDiv>
+                    </a>
                 )
             }
             {

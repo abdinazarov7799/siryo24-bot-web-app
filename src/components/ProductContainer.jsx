@@ -69,7 +69,7 @@ const Product = ({product,userId,lang,listKeyId}) => {
     }
 
     return (
-        <ProductDiv key={get(product,'id')} onClick={() => setIsOpen(true)}>
+        <ProductDiv key={get(product,'id')}>
             <MoreInfoModal
                 isModalOpen={isOpen}
                 setModalOpen={setIsOpen}
@@ -116,7 +116,7 @@ const Product = ({product,userId,lang,listKeyId}) => {
                     />
                 </div>
             </ElementDiv>
-            <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
+            <Space direction={"vertical"} style={{width: "100%"}} size={"small"} onClick={() => setIsOpen(true)}>
                 <Flex justify={"space-between"} align={"center"}>
                     <Title level={4}>{get(product,'name')}</Title>
                     <div style={{textAlign: "end"}}>

@@ -91,12 +91,13 @@ const AllApplication = () => {
                                             </Flex>
                                         </Col>
                                         <Col>
-                                            <Button
-                                                type="primary"
-                                                onClick={() => window.location.href = `tel:${get(item,'phoneNumber')}`}
-                                            >
-                                                {get(item,'user.phoneNumber')}
-                                            </Button>
+                                            <a href={`tel:${get(item,'phoneNumber')}`} target={"_blank"}>
+                                                <Button
+                                                    type="primary"
+                                                >
+                                                    {get(item,'user.phoneNumber')}
+                                                </Button>
+                                            </a>
                                         </Col>
                                     </Flex>
                                 </Space>
