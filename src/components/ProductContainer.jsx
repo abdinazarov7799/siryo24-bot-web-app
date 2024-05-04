@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {URLS} from "../constants/url.js";
 import {get, isEqual,} from "lodash";
-import {Flex, Modal, Row, Space, Typography} from "antd";
+import {Flex, Modal, Row, Space, theme, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import styled from "styled-components";
 const {Title,Text} = Typography;
@@ -24,7 +24,7 @@ const ProductDiv = styled.div`
     margin-top: 5px;
 `
 const AnalogsDiv = styled.div`
-    background-color: #f0f1f2;
+    border: 3px solid rgba(197, 197, 197, 0.45);
     padding: 15px;
     border-radius: 10px;
     margin-top: 10px;
@@ -52,6 +52,7 @@ const ElementDiv = styled.div`
         }
     }
 `
+const body = {maxHeight: 350, overflow: "auto"}
 const Product = ({product,userId,lang,listKeyId}) => {
     const {t} = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
@@ -82,11 +83,12 @@ const Product = ({product,userId,lang,listKeyId}) => {
                 open={isModalOpenAnalogs}
                 onCancel={() => setModalOpenAnalogs(false)}
                 footer={null}
+                styles={{body}}
             >
                 {
-                    get(product,'analogs',[])?.map((analog) => {
+                    get(product,'analogs',[])?.map((analog,index) => {
                         return (
-                            <AnalogsDiv>
+                            <AnalogsDiv key={index+1}>
                                 <Space direction={"vertical"} style={{width:'100%'}}>
                                     <Row>
                                         <Title level={3}>{get(analog, 'name')}</Title>

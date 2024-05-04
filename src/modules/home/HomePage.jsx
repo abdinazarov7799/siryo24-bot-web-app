@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {FloatButton, Space} from "antd";
+import {Empty, FloatButton, Space} from "antd";
 import Container from "../../components/Container.jsx";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
-import {get} from "lodash";
+import {get, isEmpty, isNil} from "lodash";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import Product from "../../components/ProductContainer.jsx";
@@ -21,11 +21,12 @@ const HomePage = () => {
     const {lang,userId} = useParams();
     const [params,setParams] = useState({})
     const [open, setOpen] = useState(false);
-    const navigate = useNavigate()
+
     const {
         data,
         fetchNextPage,
         hasNextPage,
+        refetch,
     } = useInfiniteQuery({
         queryKey: [KEYS.product_list],
         initialPageParam: 0,
@@ -41,7 +42,9 @@ const HomePage = () => {
             return allPages.length
         },
     });
-
+    useEffect(() => {
+        refetch();
+    },[params])
     const changeLang = () => {
         localStorage.setItem('lang', lang);
         i18n.changeLanguage(lang)
@@ -49,6 +52,7 @@ const HomePage = () => {
     useEffect(() => {
         changeLang();
     }, []);
+
     return (
         <>
             <Container>
@@ -63,7 +67,8 @@ const HomePage = () => {
                         hasChildren={false}
                     >
                         <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                            {get(data,'pages',[])?.flat().map((product,index) =>{
+                            {isEmpty(get(data,'pages').flat()) ? <Empty /> :
+                                get(data,'pages',[])?.flat().map((product,index) =>{
                                 return (
                                     <Product
                                         product={product}

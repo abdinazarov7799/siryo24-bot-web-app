@@ -167,7 +167,7 @@ const MyApplication = ({userId}) => {
             <Space direction={"vertical"} style={{width: "100%"}}>
                 {get(data,'data.data.content')?.map((item) => {
                     return (
-                        <ItemDiv>
+                        <ItemDiv key={get(item,'id')}>
                             <FixedElement>
                                 <Popconfirm
                                     title={t("Delete")}
