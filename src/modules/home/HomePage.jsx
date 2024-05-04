@@ -67,7 +67,7 @@ const HomePage = () => {
                         hasChildren={false}
                     >
                         <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                            {isEmpty(get(data,'pages').flat()) ? <Empty /> :
+                            {isEmpty(get(data,'pages',[])?.flat()) ? <Empty /> :
                                 get(data,'pages',[])?.flat().map((product,index) =>{
                                 return (
                                     <Product
