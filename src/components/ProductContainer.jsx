@@ -52,7 +52,7 @@ const ElementDiv = styled.div`
         }
     }
 `
-const body = {maxHeight: 350, overflow: "auto"}
+const body = {maxHeight: 400, overflowY: "scroll"}
 const Product = ({product,userId,lang,listKeyId}) => {
     const {t} = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +70,7 @@ const Product = ({product,userId,lang,listKeyId}) => {
     }
 
     return (
-        <ProductDiv key={get(product,'id')}>
+        <ProductDiv>
             <MoreInfoModal
                 isModalOpen={isOpen}
                 setModalOpen={setIsOpen}

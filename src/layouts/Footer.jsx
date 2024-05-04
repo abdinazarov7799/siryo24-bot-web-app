@@ -7,7 +7,7 @@ import {
     StarOutlined,
     UnorderedListOutlined
 } from "@ant-design/icons";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {get, isEqual} from "lodash";
 import {useTelegram} from "../hooks/useTelegram.jsx";
@@ -20,9 +20,9 @@ const buttonStyle = {
     alignItems: "center",
     cursor: "pointer",
 }
+const buttonColor = !isEqual(get(tg,'colorScheme','light'),'light') && "#fff"
 const buttonIconStyle = {
     fontSize: 30,
-    color: !isEqual(get(tg,'colorScheme','light'),'light') && "#fff"
 }
 const buttonTextStyle = {
     fontSize: 12
@@ -30,56 +30,74 @@ const buttonTextStyle = {
 
 const Footer = ({userId,lang}) => {
     const {
-        token: { colorBgContainer },
+        token: { colorBgContainer,colorPrimary },
     } = theme.useToken();
     const navigate = useNavigate();
     const {t} = useTranslation();
+    const {pathname} = useLocation()
+    const navigateUrls = {
+        catalog: `/catalog/${userId}/${lang}`,
+        application: `/application/${userId}/${lang}`,
+        saved: `/saved/${userId}/${lang}`,
+        archive: `/archive/${userId}/${lang}`,
+        info: `/info/${userId}/${lang}`,
+    }
     return (
         <div style={{
             position: "fixed",
             bottom: 0,
             left: 0,
             padding: "10px 15px",
-            borderRadius: 0,
+            borderRadius: "10px 10px 0 0",
             borderTop: "1px solid #a2a2a2",
             width: "100%",
             backgroundColor: colorBgContainer,
         }}>
             <Flex justify={"space-between"}>
                 <div
-                    style={buttonStyle}
-                    onClick={() => navigate(`/catalog/${userId}/${lang}`)}
+                    style={{...buttonStyle,color: isEqual(pathname,get(navigateUrls,"catalog")) ? colorPrimary : buttonColor}}
+                    onClick={() => navigate(get(navigateUrls,"catalog"))}
                 >
                     <UnorderedListOutlined style={buttonIconStyle}/>
-                    <Text style={buttonTextStyle}>{t("Asosiy menyu")}</Text>
+                    <Text style={{...buttonTextStyle,color: isEqual(pathname,get(navigateUrls,"catalog")) ? colorPrimary : buttonColor}}>
+                        {t("Asosiy menyu")}
+                    </Text>
                 </div>
                 <div
-                    style={buttonStyle}
-                    onClick={() => navigate(`/application/${userId}/${lang}`)}
+                    style={{...buttonStyle,color: isEqual(pathname,get(navigateUrls,"application")) ? colorPrimary : buttonColor}}
+                    onClick={() => navigate(get(navigateUrls,"application"))}
                 >
                     <ShoppingCartOutlined style={buttonIconStyle}/>
-                    <Text style={buttonTextStyle}>{t("Buyurtmalar")}</Text>
+                    <Text style={{...buttonTextStyle,color: isEqual(pathname,get(navigateUrls,"application")) ? colorPrimary : buttonColor}}>
+                        {t("Buyurtmalar")}
+                    </Text>
                 </div>
                 <div
-                    style={buttonStyle}
-                    onClick={() => navigate(`/saved/${userId}/${lang}`)}
+                    style={{...buttonStyle,color: isEqual(pathname,get(navigateUrls,"saved")) ? colorPrimary : buttonColor}}
+                    onClick={() => navigate(get(navigateUrls,"saved"))}
                 >
                     <StarOutlined style={buttonIconStyle}/>
-                    <Text style={buttonTextStyle}>{t("Sevimlilar")}</Text>
+                    <Text style={{...buttonTextStyle,color: isEqual(pathname,get(navigateUrls,"saved")) ? colorPrimary : buttonColor}}>
+                        {t("Sevimlilar")}
+                    </Text>
                 </div>
                 <div
-                    style={buttonStyle}
-                    onClick={() => navigate(`/archive/${userId}/${lang}`)}
+                    style={{...buttonStyle,color: isEqual(pathname,get(navigateUrls,"archive")) ? colorPrimary : buttonColor}}
+                    onClick={() => navigate(get(navigateUrls,"archive"))}
                 >
                     <FundOutlined style={buttonIconStyle}/>
-                    <Text style={buttonTextStyle}>{t("Arxiv narxlar")}</Text>
+                    <Text style={{...buttonTextStyle,color: isEqual(pathname,get(navigateUrls,"archive")) ? colorPrimary : buttonColor}}>
+                        {t("Arxiv narxlar")}
+                    </Text>
                 </div>
                 <div
-                    style={buttonStyle}
-                    onClick={() => navigate(`/info/${userId}/${lang}`)}
+                    style={{...buttonStyle,color: isEqual(pathname,get(navigateUrls,"info")) ? colorPrimary : buttonColor}}
+                    onClick={() => navigate(get(navigateUrls,"info"))}
                 >
                     <InfoCircleOutlined style={buttonIconStyle}/>
-                    <Text style={buttonTextStyle}>{t("Tavsif")}</Text>
+                    <Text style={{...buttonTextStyle,color: isEqual(pathname,get(navigateUrls,"info")) ? colorPrimary : buttonColor}}>
+                        {t("Tavsif")}
+                    </Text>
                 </div>
             </Flex>
         </div>

@@ -3,17 +3,15 @@ import {Empty, FloatButton, Space} from "antd";
 import Container from "../../components/Container.jsx";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
-import {get, isEmpty, isNil} from "lodash";
+import {get, isEmpty} from "lodash";
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import Product from "../../components/ProductContainer.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useInfiniteQuery} from "react-query";
 import axios from "axios";
 import config from "../../config.js";
 import HomeHeader from "./HomeHeader.jsx";
-import {ShoppingCartOutlined} from "@ant-design/icons";
-import {FiBookmark} from "react-icons/fi";
 import Footer from "../../layouts/Footer.jsx";
 
 const HomePage = () => {
@@ -52,7 +50,7 @@ const HomePage = () => {
     useEffect(() => {
         changeLang();
     }, []);
-
+    const productsData = get(data,'pages',[])?.flat();
     return (
         <>
             <Container>
@@ -67,16 +65,15 @@ const HomePage = () => {
                         hasChildren={false}
                     >
                         <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                            {isEmpty(get(data,'pages',[])?.flat()) ? <Empty /> :
-                                get(data,'pages',[])?.flat().map((product,index) =>{
+                            {isEmpty(productsData) ? <Empty /> :
+                                productsData?.map((product,index) =>{
                                 return (
                                     <Product
                                         product={product}
-                                        key={get(product,'id')}
+                                        key={index+1}
                                         userId={userId}
                                         lang={lang}
                                         listKeyId={KEYS.product_list}
-                                        index={index}
                                     />
                                 )
                                 }

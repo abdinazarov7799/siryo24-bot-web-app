@@ -8,10 +8,11 @@ import axios from "axios";
 import config from "../../config.js";
 import {URLS} from "../../constants/url.js";
 import {useParams} from "react-router-dom";
-import {CalendarOutlined, CommentOutlined} from "@ant-design/icons";
+import {CommentOutlined} from "@ant-design/icons";
 import styled from "styled-components";
 import {useTranslation} from "react-i18next";
 import UserImg from '../../assets/icons/group_user.svg'
+import calendar from "../../assets/icons/calendar.svg";
 const {Title,Text,Link} = Typography;
 
 
@@ -45,11 +46,11 @@ const AllApplication = () => {
             return allPages.length
         },
     });
-
+    const productsData = get(data,'pages',[])?.flat();
     return (
         <>
             <InfiniteScroll
-                dataLength={data ? data.pages.flat().length : 0}
+                dataLength={data ? productsData.length : 0}
                 next={() => fetchNextPage()}
                 hasMore={hasNextPage}
                 loader={<h4></h4>}
@@ -57,9 +58,9 @@ const AllApplication = () => {
                 hasChildren={false}
             >
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                    {get(data,'pages',[])?.flat().map((item) => {
+                    {productsData?.map((item,index) => {
                         return (
-                            <ItemDiv>
+                            <ItemDiv key={index+1}>
                                 <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>
                                     <Row justify={"space-between"}>
                                         <Col>
@@ -72,10 +73,10 @@ const AllApplication = () => {
                                             </Flex>
                                         </Col>
                                         <Col style={{textAlign: "end"}}>
-                                            <Space>
-                                                <CalendarOutlined style={{fontSize: 16}}/>
+                                            <Flex style={{width: 153}} align={"center"}>
+                                                <img src={calendar} width={24} height={24} style={{margin: "auto"}}/>
                                                 <Text>{get(item,'createdAt')}</Text>
-                                            </Space>
+                                            </Flex>
                                         </Col>
                                     </Row>
                                     <Flex wrap={"wrap"}>

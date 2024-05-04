@@ -5,13 +5,14 @@ import useGetOneQuery from "../../hooks/api/useGetOneQuery.js";
 import {Button, Col, Flex, Form, Input, Modal, Popconfirm, Row, Space, TreeSelect, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import {CalendarOutlined, CommentOutlined, DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import {get, isEqual, isNil} from "lodash";
+import {get, isNil} from "lodash";
 import axios from "axios";
 import config from "../../config.js";
 import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
 import usePostQuery from "../../hooks/api/usePostQuery.js";
 import styled from "styled-components";
 import useDeleteQuery from "../../hooks/api/useDeleteQuery.js";
+import calendar from '../../assets/icons/calendar.svg'
 const { TextArea } = Input;
 const {Title,Text} = Typography;
 
@@ -165,9 +166,9 @@ const MyApplication = ({userId}) => {
             </Modal>
 
             <Space direction={"vertical"} style={{width: "100%"}}>
-                {get(data,'data.data.content')?.map((item) => {
+                {get(data,'data.data.content')?.map((item,index) => {
                     return (
-                        <ItemDiv key={get(item,'id')}>
+                        <ItemDiv key={index+1}>
                             <FixedElement>
                                 <Popconfirm
                                     title={t("Delete")}
@@ -198,10 +199,10 @@ const MyApplication = ({userId}) => {
                                         }
                                     </Space>
                                     <Col style={{textAlign: "end"}}>
-                                        <Space style={{width: 150}}>
-                                            <CalendarOutlined style={{fontSize: 16}}/>
+                                        <Flex style={{width: 153}} align={"center"}>
+                                            <img src={calendar} width={24} height={24} style={{margin: "auto"}}/>
                                             <Text>{get(item,'createdAt')}</Text>
-                                        </Space>
+                                        </Flex>
                                     </Col>
                                 </Row>
                                 <Flex wrap={"wrap"}>

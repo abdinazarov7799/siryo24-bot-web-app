@@ -8,4 +8,5 @@ export const KEYS = {
     get_product_name: "get_product_name",
     get_favorites: "get_favorites",
     get_application: "get_application",
+    get_price_history: "get_price_history"
 }

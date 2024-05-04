@@ -11,4 +11,5 @@ export const URLS = {
     get_application: "/api/application-web/get-all",
     add_application: "/api/application-web/add",
     delete_application: "/api/application-web/delete",
+    get_price_history: "/api/web-price-history/get",
 }

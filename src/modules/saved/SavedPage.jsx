@@ -32,10 +32,10 @@ const SavedPage = () => {
                     <Title level={3}>{t("Sevimlilar")}</Title>
                 </Flex>
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                    {get(data,'data.data.content',[])?.map((product) =>
+                    {get(data,'data.data.content',[])?.map((product,index) =>
                         <Product
                             product={product}
-                            key={get(product,'id')}
+                            key={index+1}
                             userId={userId}
                             lang={lang}
                             listKeyId={KEYS.get_favorites}
