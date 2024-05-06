@@ -9,7 +9,7 @@ const TabCompany = ({data}) => {
 
     return (
         <div>
-            <Text style={{fontSize: 25}}>{t("Seller info")}: {get(data,'data.sellerInfo')}</Text>
+            <Text style={{fontSize: 25}}>{get(data,'data.sellerInfo')}</Text>
         </div>
     );
 };

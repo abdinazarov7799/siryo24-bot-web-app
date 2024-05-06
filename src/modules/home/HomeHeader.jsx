@@ -1,26 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {Affix, Button, Drawer, Flex, Input, Select, Space, Switch, Tag, theme, TreeSelect, Typography} from "antd";
-import {CloseOutlined, FilterOutlined, SearchOutlined} from "@ant-design/icons";
+import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
 import {useTranslation} from "react-i18next";
-import {get, isNil,isEmpty} from "lodash";
+import {get, isNil, isEmpty, isNull, isEqual} from "lodash";
 const {Title} = Typography;
 
-const initialParams = {
-    category: null,
-    country: null,
-    manufacturer: null,
-    name: null,
-    seller: null,
-    stockMarket: false
-}
-const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
+
+const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
     const {
         token: { colorPrimary },
     } = theme.useToken();
-    const [preParams,setPreParams] = useState(initialParams);
+    const [preParams,setPreParams] = useState(params);
     const {t} = useTranslation();
     const [treeData, setTreeData] = useState();
     const {data:categories,isLoadingCategories} = useGetAllQuery({
@@ -49,6 +42,9 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
         enabled: open
     })
     useEffect(() => {
+        setPreParams(params)
+    }, [params]);
+    useEffect(() => {
         if (!isNil(get(categories,'data.data'))){
             setTreeData(get(categories,'data.data')?.map((item,index) => {
                 return {
@@ -71,7 +67,12 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
             return {...prevState, [name]: value};
         })
     }
-    console.log(params)
+    const onClearParam = (name) => {
+        setParams(prevState => {
+            return {...prevState, [name]: null};
+        })
+    }
+
     return (
         <>
             <Affix offsetTop={10}>
@@ -92,15 +93,23 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                 {
                     !isEmpty(params) && (
                         <Space style={{marginTop: 5}}>
-                            <Button icon={<CloseOutlined />} type={"primary"}>
-                                dsadsadas
-                            </Button>
-                            <Tag
-                                closable
-                                color={colorPrimary}
-                            >
-                                dsadsadas
-                            </Tag>
+                            {
+                                Object.entries(params)?.map((item) => {
+                                    let name = get(item,'[0]')
+                                    let value = get(item,'[1]')
+                                    if (!isNull(value) && value) {
+                                        return (
+                                            <Tag
+                                                closable
+                                                color={colorPrimary}
+                                                onClose={() => onClearParam(name)}
+                                            >
+                                                {isEqual(value,true) ? t("Birja") : value}
+                                            </Tag>
+                                        )
+                                    }
+                                })
+                            }
                         </Space>
                     )
                 }

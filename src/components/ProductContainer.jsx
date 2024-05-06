@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {URLS} from "../constants/url.js";
 import {get, isEqual,} from "lodash";
-import {Flex, Modal, Row, Space, theme, Typography} from "antd";
+import {Flex, Modal, Row, Space,Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import styled from "styled-components";
 const {Title,Text} = Typography;
@@ -53,7 +53,7 @@ const ElementDiv = styled.div`
     }
 `
 const body = {maxHeight: 400, overflowY: "scroll"}
-const Product = ({product,userId,lang,listKeyId}) => {
+const Product = ({product,userId,lang,listKeyId,setParams}) => {
     const {t} = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isModalOpenAnalogs, setModalOpenAnalogs] = useState(false);
@@ -68,7 +68,11 @@ const Product = ({product,userId,lang,listKeyId}) => {
             url: `${URLS.product_add_remove_favorites}/${id}/${userId}?add=${add}`,
         })
     }
-
+    const setProductToParams = (name) => {
+        setParams(prevState => {
+            return {...prevState,name};
+        })
+    }
     return (
         <ProductDiv>
             <MoreInfoModal
@@ -88,7 +92,7 @@ const Product = ({product,userId,lang,listKeyId}) => {
                 {
                     get(product,'analogs',[])?.map((analog,index) => {
                         return (
-                            <AnalogsDiv key={index+1}>
+                            <AnalogsDiv key={index+1} onClick={() => setProductToParams(get(analog, 'name'))}>
                                 <Space direction={"vertical"} style={{width:'100%'}}>
                                     <Row>
                                         <Title level={3}>{get(analog, 'name')}</Title>

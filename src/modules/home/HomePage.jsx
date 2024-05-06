@@ -15,10 +15,19 @@ import HomeHeader from "./HomeHeader.jsx";
 import Footer from "../../layouts/Footer.jsx";
 import Loader from "../../components/Loader.jsx";
 
+const initialParams = {
+    category: null,
+    country: null,
+    manufacturer: null,
+    name: null,
+    seller: null,
+    stockMarket: false
+}
+
 const HomePage = () => {
     const {i18n} = useTranslation();
     const {lang,userId} = useParams();
-    const [params,setParams] = useState({})
+    const [params,setParams] = useState(initialParams)
     const [open, setOpen] = useState(false);
     const {t} = useTranslation()
     const {
@@ -58,9 +67,16 @@ const HomePage = () => {
         <>
             <Container>
                 <Space style={{width: "100%"}} direction={"vertical"}>
-                    <HomeHeader open={open} setOpen={setOpen} params={params} setParams={setParams} userId={userId}/>
+                    <HomeHeader
+                        open={open}
+                        setOpen={setOpen}
+                        params={params}
+                        setParams={setParams}
+                        userId={userId}
+                        initialParams={initialParams}
+                    />
                     <InfiniteScroll
-                        dataLength={data ? data.pages.flat().length : 0}
+                        dataLength={data ? data?.pages?.flat().length : 0}
                         next={() => fetchNextPage()}
                         hasMore={hasNextPage}
                         loader={<h4></h4>}
@@ -72,6 +88,7 @@ const HomePage = () => {
                                 productsData?.map((product,index) =>{
                                 return (
                                     <Product
+                                        setParams={setParams}
                                         product={product}
                                         key={index+1}
                                         userId={userId}
