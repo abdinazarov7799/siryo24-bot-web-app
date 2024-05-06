@@ -17,10 +17,10 @@ import axios from "axios";
 import config from "../../config.js";
 import styled from "styled-components";
 import Loader from "../../components/Loader.jsx";
-const {Title} = Typography;
+const {Title,Text} = Typography;
 
 const initialParams = {
-    from: dayjs(new Date("05-01-2024")).unix(),
+    from: dayjs(Date.now()).unix(),
     to: dayjs(Date.now()).unix()
 }
 
@@ -31,7 +31,6 @@ const ItemDiv = styled.div`
     position: relative;
     margin-top: 5px;
 `
-
 const ArchivePage = () => {
     const {userId,lang} = useParams()
     const {t} = useTranslation();
