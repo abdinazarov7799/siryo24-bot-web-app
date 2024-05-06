@@ -13,7 +13,7 @@ const Router = ({ ...rest }) => {
     useEffect(() => {
         tg?.ready();
         tg?.expand();
-        tg?.enableClosingConfirmation()
+        tg?.enableClosingConfirmation();
     }, [])
   return (
     <BrowserRouter>

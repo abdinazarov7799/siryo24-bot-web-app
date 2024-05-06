@@ -6,8 +6,6 @@ import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import {get, isNil,isEmpty} from "lodash";
-import axios from "axios";
-import config from "../../config.js";
 const {Title} = Typography;
 
 const initialParams = {
@@ -21,7 +19,7 @@ const initialParams = {
 const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
     const [preParams,setPreParams] = useState(initialParams);
     const {t} = useTranslation();
-    const [treeData, setTreeData] = useState([]);
+    const [treeData, setTreeData] = useState();
     const {data:categories,isLoadingCategories} = useGetAllQuery({
         key: KEYS.get_category,
         url: URLS.get_category,
@@ -49,41 +47,22 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
     })
     useEffect(() => {
         if (!isNil(get(categories,'data.data'))){
-            setTreeData(get(categories,'data.data')?.map((item) => {
+            setTreeData(get(categories,'data.data')?.map((item,index) => {
                 return {
-                    id: get(item,'id'),
-                    pId: 0,
-                    value: get(item,'id'),
+                    value: `category-${index}`,
                     title: get(item,'name'),
                     disabled: true,
+                    children: !isEmpty(get(item,'products')) ? get(item,'products')?.map((child) => {
+                        return {
+                            value: `${get(child,'id')}`,
+                            title: get(child,'name'),
+                        }
+                    }) : []
                 }
             }))
         }
     }, [categories]);
-    const onLoadData = async ({id}) => {
-        try {
-            const response = await axios({
-                method: 'get',
-                baseURL: config.API_ROOT,
-                url: `${URLS.get_product_name}/${id}`,
-            });
-            const data = get(response,'data.data',[]);
-            const treeNodeData = data?.map(item => ({
-                pId: id,
-                value: get(item,'id'),
-                title: get(item,'name'),
-                isLeaf: true,
-            }));
-            setTreeData(prevData => {
-                return [
-                    ...prevData,
-                    ...treeNodeData
-                ]
-            });
-        } catch (error) {
-            console.error('Error loading data:', error);
-        }
-    }
+
     const onChange = (name,value) => {
         setPreParams(prevState => {
             return {...prevState, [name]: value};
@@ -118,12 +97,10 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
             >
                 <Space direction={"vertical"} style={{width: "100%"}}>
                     <TreeSelect
-                        treeDataSimpleMode
                         style={{ width: '100%' }}
                         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                         placeholder={t("Kategoriya")}
                         allowClear
-                        loadData={onLoadData}
                         value={get(preParams,'category')}
                         treeData={treeData}
                         onChange={(e) => onChange("category",e)}

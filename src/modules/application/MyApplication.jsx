@@ -2,12 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {URLS} from "../../constants/url.js";
 import {KEYS} from "../../constants/key.js";
 import useGetOneQuery from "../../hooks/api/useGetOneQuery.js";
-import {Button, Col, Flex, Form, Input, Modal, Popconfirm, Row, Space, TreeSelect, Typography} from "antd";
+import {Button, Col, Flex, Form, Input, message, Modal, Popconfirm, Row, Space, TreeSelect, Typography} from "antd";
 import {useTranslation} from "react-i18next";
-import {CalendarOutlined, CommentOutlined, DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import {get, isNil} from "lodash";
-import axios from "axios";
-import config from "../../config.js";
+import {CommentOutlined, DeleteOutlined, PlusOutlined} from "@ant-design/icons";
+import {get, isEmpty, isNil} from "lodash";
 import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
 import usePostQuery from "../../hooks/api/usePostQuery.js";
 import styled from "styled-components";
@@ -61,48 +59,29 @@ const MyApplication = ({userId}) => {
         form.resetFields();
     }, [isModalOpen]);
     const {mutate} = usePostQuery({
-        listKeyId: `${KEYS.get_application}_my`
+        listKeyId: `${KEYS.get_application}_my`,
+        hideSuccessToast: true
     })
     const {mutate:deleteApplication,isLoading:isLoadingDelete} = useDeleteQuery({
         listKeyId: `${KEYS.get_application}_my`,
     })
     useEffect(() => {
         if (!isNil(get(categories,'data.data'))){
-            setTreeData(get(categories,'data.data')?.map((item) => {
+            setTreeData(get(categories,'data.data')?.map((item,index) => {
                 return {
-                    id: get(item,'id'),
-                    pId: 0,
-                    value: get(item,'id'),
+                    value: `category-${index}`,
                     title: get(item,'name'),
                     disabled: true,
+                    children: !isEmpty(get(item,'products')) ? get(item,'products')?.map((child) => {
+                        return {
+                            value: `${get(child,'id')}`,
+                            title: get(child,'name'),
+                        }
+                    }) : []
                 }
             }))
         }
     }, [categories]);
-    const onLoadData = async ({id}) => {
-        try {
-            const response = await axios({
-                method: 'get',
-                baseURL: config.API_ROOT,
-                url: `${URLS.get_product_name}/${id}`,
-            });
-            const data = get(response,'data.data',[]);
-            const treeNodeData = data?.map(item => ({
-                pId: id,
-                value: get(item,'id'),
-                title: get(item,'name'),
-                isLeaf: true,
-            }));
-            setTreeData(prevData => {
-                return [
-                    ...prevData,
-                    ...treeNodeData
-                ]
-            });
-        } catch (error) {
-            console.error('Error loading data:', error);
-        }
-    }
     const onFinish = (data) => {
         mutate({
             url: `${URLS.add_application}/${userId}`,
@@ -110,6 +89,7 @@ const MyApplication = ({userId}) => {
         },{
             onSuccess: () => {
                 setModalOpen(false)
+                message.success('Success')
             }
         })
     }
@@ -138,13 +118,11 @@ const MyApplication = ({userId}) => {
                         }]}
                     >
                         <TreeSelect
-                            treeDataSimpleMode
                             style={{ width: '100%' }}
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             placeholder={t("Kategoriya")}
                             allowClear
                             multiple
-                            loadData={onLoadData}
                             treeData={treeData}
                         />
                     </Form.Item>
@@ -164,7 +142,9 @@ const MyApplication = ({userId}) => {
                     </Form.Item>
                 </Form>
             </Modal>
-
+            <Button type={"primary"} block icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
+                {t("Yangi qo'shish")}
+            </Button>
             <Space direction={"vertical"} style={{width: "100%"}}>
                 {get(data,'data.data.content')?.map((item,index) => {
                     return (
@@ -215,9 +195,6 @@ const MyApplication = ({userId}) => {
                     )
                 })}
             </Space>
-            <Button type={"primary"} block icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-                {t("Yangi qo'shish")}
-            </Button>
         </Space>
     );
 };

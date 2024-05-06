@@ -13,17 +13,17 @@ const {Title} = Typography;
 const ArchivePage = () => {
     const {userId,lang} = useParams()
     const {t} = useTranslation();
-    const {} = useGetAllQuery({
+    const {data} = useGetAllQuery({
         url: URLS.get_price_history,
         key: KEYS.get_price_history,
         params: {
             params: {
-                from: dayjs(Date.now()).format("DD.MM.YYYY HH:mm:ss"),
-                to: dayjs(Date.now()).format("DD.MM.YYYY HH:mm:ss")
+                from: dayjs(new Date("05-01-2024")).unix(),
+                to: dayjs(Date.now()).unix()
             }
         }
     })
-    console.log(dayjs(Date.now()).format("DD.MM.YYYY HH:mm:ss"));
+    console.log(new Date("05-01-2024"));
     return (
         <Container>
             <Space direction="vertical" style={{width:'100%'}}>
