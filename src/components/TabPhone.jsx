@@ -32,14 +32,14 @@ const TabPhone = ({data}) => {
             }
             {
                 !isNil(get(data, 'data.sellerPhone2')) && (
-                    <ElementDiv onClick={() => handleClick(get(data, 'data.sellerPhone2'))}>
-                        <Text>{get(data, 'data.sellerPhone2')}</Text>
-                        <PhoneOutlined />
-                    </ElementDiv>
+                    <a href={`tel:${get(data, 'data.sellerPhone2')}`} target={"_blank"}>
+                        <ElementDiv>
+                            <Text>{get(data, 'data.sellerPhone2')}</Text>
+                            <PhoneOutlined />
+                        </ElementDiv>
+                    </a>
                 )
             }
-
-            {get(data, 'data.sellerPhone2')}
         </Space>
     );
 };

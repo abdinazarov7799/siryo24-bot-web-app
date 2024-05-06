@@ -2,7 +2,21 @@ import React, {useEffect, useState} from 'react';
 import {URLS} from "../../constants/url.js";
 import {KEYS} from "../../constants/key.js";
 import useGetOneQuery from "../../hooks/api/useGetOneQuery.js";
-import {Button, Col, Flex, Form, Input, message, Modal, Popconfirm, Row, Space, TreeSelect, Typography} from "antd";
+import {
+    Button,
+    Col,
+    Empty,
+    Flex,
+    Form,
+    Input,
+    message,
+    Modal,
+    Popconfirm,
+    Row,
+    Space,
+    TreeSelect,
+    Typography
+} from "antd";
 import {useTranslation} from "react-i18next";
 import {CommentOutlined, DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import {get, isEmpty, isNil} from "lodash";
@@ -11,6 +25,7 @@ import usePostQuery from "../../hooks/api/usePostQuery.js";
 import styled from "styled-components";
 import useDeleteQuery from "../../hooks/api/useDeleteQuery.js";
 import calendar from '../../assets/icons/calendar.svg'
+import Loader from "../../components/Loader.jsx";
 const { TextArea } = Input;
 const {Title,Text} = Typography;
 
@@ -146,7 +161,7 @@ const MyApplication = ({userId}) => {
                 {t("Yangi qo'shish")}
             </Button>
             <Space direction={"vertical"} style={{width: "100%"}}>
-                {get(data,'data.data.content')?.map((item,index) => {
+                {isLoading ? <Loader /> : isEmpty(get(data,'data.data.content')) ? <Empty style={{marginTop: 50}} description={t("Malumot yo'q")}/> : get(data,'data.data.content')?.map((item,index) => {
                     return (
                         <ItemDiv key={index+1}>
                             <FixedElement>

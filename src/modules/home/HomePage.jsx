@@ -13,18 +13,20 @@ import axios from "axios";
 import config from "../../config.js";
 import HomeHeader from "./HomeHeader.jsx";
 import Footer from "../../layouts/Footer.jsx";
+import Loader from "../../components/Loader.jsx";
 
 const HomePage = () => {
     const {i18n} = useTranslation();
     const {lang,userId} = useParams();
     const [params,setParams] = useState({})
     const [open, setOpen] = useState(false);
-
+    const {t} = useTranslation()
     const {
         data,
         fetchNextPage,
         hasNextPage,
         refetch,
+        isLoading
     } = useInfiniteQuery({
         queryKey: [KEYS.product_list],
         initialPageParam: 0,
@@ -51,6 +53,7 @@ const HomePage = () => {
         changeLang();
     }, []);
     const productsData = get(data,'pages',[])?.flat();
+
     return (
         <>
             <Container>
@@ -65,7 +68,7 @@ const HomePage = () => {
                         hasChildren={false}
                     >
                         <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                            {isEmpty(productsData) ? <Empty /> :
+                            {isLoading ? <Loader /> : isEmpty(productsData) ? <Empty style={{marginTop: 50}} description={t("Malumot yo'q")}/> :
                                 productsData?.map((product,index) =>{
                                 return (
                                     <Product

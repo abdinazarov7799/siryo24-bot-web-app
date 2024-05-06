@@ -1,14 +1,15 @@
 import React from 'react';
-import {Flex, Space, Typography} from "antd";
+import {Empty, Flex, Space, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import {URLS} from "../../constants/url.js";
 import {KEYS} from "../../constants/key.js";
 import {useParams} from "react-router-dom";
 import useGetOneQuery from "../../hooks/api/useGetOneQuery.js";
-import {get} from "lodash";
+import {get, isEmpty} from "lodash";
 import Product from "../../components/ProductContainer.jsx";
 import Container from "../../components/Container.jsx";
 import Footer from "../../layouts/Footer.jsx";
+import Loader from "../../components/Loader.jsx";
 const {Title} = Typography;
 
 const SavedPage = () => {
@@ -32,7 +33,7 @@ const SavedPage = () => {
                     <Title level={3}>{t("Sevimlilar")}</Title>
                 </Flex>
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                    {get(data,'data.data.content',[])?.map((product,index) =>
+                    {isLoading ? <Loader /> : isEmpty(get(data,'data.data.content')) ? <Empty style={{marginTop: 50}} description={t("Malumot yo'q")}/> : get(data,'data.data.content',[])?.map((product,index) =>
                         <Product
                             product={product}
                             key={index+1}

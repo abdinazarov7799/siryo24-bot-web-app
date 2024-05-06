@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Affix, Button, Drawer, Flex, Input, Select, Space, Switch, TreeSelect, Typography} from "antd";
-import {FilterOutlined, SearchOutlined} from "@ant-design/icons";
+import {Affix, Button, Drawer, Flex, Input, Select, Space, Switch, Tag, theme, TreeSelect, Typography} from "antd";
+import {CloseOutlined, FilterOutlined, SearchOutlined} from "@ant-design/icons";
 import useGetAllQuery from "../../hooks/api/useGetAllQuery.js";
 import {KEYS} from "../../constants/key.js";
 import {URLS} from "../../constants/url.js";
@@ -17,6 +17,9 @@ const initialParams = {
     stockMarket: false
 }
 const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
+    const {
+        token: { colorPrimary },
+    } = theme.useToken();
     const [preParams,setPreParams] = useState(initialParams);
     const {t} = useTranslation();
     const [treeData, setTreeData] = useState();
@@ -68,7 +71,7 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
             return {...prevState, [name]: value};
         })
     }
-
+    console.log(params)
     return (
         <>
             <Affix offsetTop={10}>
@@ -86,6 +89,21 @@ const HomeHeader = ({open,setOpen,params,setParams,userId}) => {
                         }
                     })}
                 />
+                {
+                    !isEmpty(params) && (
+                        <Space style={{marginTop: 5}}>
+                            <Button icon={<CloseOutlined />} type={"primary"}>
+                                dsadsadas
+                            </Button>
+                            <Tag
+                                closable
+                                color={colorPrimary}
+                            >
+                                dsadsadas
+                            </Tag>
+                        </Space>
+                    )
+                }
             </Affix>
             <Drawer
                 placement={"top"}

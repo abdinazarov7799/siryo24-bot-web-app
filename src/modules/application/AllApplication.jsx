@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Col, Flex, Row, Space, Typography} from "antd";
-import {get} from "lodash";
+import {Button, Col, Empty, Flex, Row, Space, Typography} from "antd";
+import {get, isEmpty} from "lodash";
 import {KEYS} from "../../constants/key.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useInfiniteQuery} from "react-query";
@@ -13,6 +13,7 @@ import styled from "styled-components";
 import {useTranslation} from "react-i18next";
 import UserImg from '../../assets/icons/group_user.svg'
 import calendar from "../../assets/icons/calendar.svg";
+import Loader from "../../components/Loader.jsx";
 const {Title,Text,Link} = Typography;
 
 
@@ -31,6 +32,7 @@ const AllApplication = () => {
         data,
         fetchNextPage,
         hasNextPage,
+        isLoading
     } = useInfiniteQuery({
         queryKey: [`${KEYS.get_application}_all`],
         initialPageParam: 0,
@@ -47,6 +49,7 @@ const AllApplication = () => {
         },
     });
     const productsData = get(data,'pages',[])?.flat();
+
     return (
         <>
             <InfiniteScroll
@@ -58,7 +61,7 @@ const AllApplication = () => {
                 hasChildren={false}
             >
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
-                    {productsData?.map((item,index) => {
+                    {isLoading ? <Loader /> : isEmpty(productsData) ? <Empty style={{marginTop: 50}} description={t("Malumot yo'q")}/> : productsData?.map((item,index) => {
                         return (
                             <ItemDiv key={index+1}>
                                 <Space direction={"vertical"} style={{width: "100%"}} size={"small"}>

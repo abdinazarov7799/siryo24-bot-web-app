@@ -1,8 +1,8 @@
 import React from 'react';
-import {Spin} from "antd";
+import {Row, Spin} from "antd";
 
 const Loader = () => {
-    return <Spin fullscreen/>
+    return <Row justify={"center"} style={{marginTop: 50}}><Spin /></Row>
 };
 
 export default Loader;
