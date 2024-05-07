@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from "../../components/Container.jsx";
 import Footer from "../../layouts/Footer.jsx";
 import {useParams} from "react-router-dom";
@@ -19,11 +19,6 @@ import styled from "styled-components";
 import Loader from "../../components/Loader.jsx";
 const {Title,Text} = Typography;
 
-const initialParams = {
-    from: dayjs(Date.now()).unix(),
-    to: dayjs(Date.now()).unix()
-}
-
 const ItemDiv = styled.div`
     border: 3px solid rgba(197, 197, 197, 0.45);
     border-radius: 15px;
@@ -34,12 +29,13 @@ const ItemDiv = styled.div`
 const ArchivePage = () => {
     const {userId,lang} = useParams()
     const {t} = useTranslation();
-    const [params, setParams] = useState()
+    const [days, setDays] = useState(1)
     const {
         data,
         fetchNextPage,
         hasNextPage,
-        isLoading
+        isLoading,
+        refetch
     } = useInfiniteQuery({
         queryKey: [KEYS.get_price_history],
         initialPageParam: 0,
@@ -47,7 +43,7 @@ const ArchivePage = () => {
             method: "get",
             baseURL: config.API_ROOT,
             url: URLS.get_price_history,
-            params: {...params,page: pageParam},
+            params: {days,page: pageParam},
         })
             .then(response => response?.data?.data?.content)
             .catch(error => console.error('Error fetching data:', error)),
@@ -55,7 +51,9 @@ const ArchivePage = () => {
             return allPages.length
         },
     });
-
+    useEffect(() => {
+        refetch()
+    }, [days]);
     const productsData = get(data,'pages',[])?.flat();
     return (
         <Container>
@@ -66,11 +64,11 @@ const ArchivePage = () => {
                 <Flex>
                     <Segmented
                         block
-
                         style={{width:'100%'}}
                         options={[1, 7, 30, 90, 365]}
+                        value={days}
                         onChange={(value) => {
-                            console.log(value);
+                            setDays(value);
                         }}
                     />
                 </Flex>

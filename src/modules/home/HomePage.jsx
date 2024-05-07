@@ -16,12 +16,34 @@ import Footer from "../../layouts/Footer.jsx";
 import Loader from "../../components/Loader.jsx";
 
 const initialParams = {
-    category: null,
-    country: null,
-    manufacturer: null,
-    name: null,
-    seller: null,
-    stockMarket: false
+    category: {
+        label: null,
+        value: null
+    },
+    country: {
+        label: null,
+        value: null
+    },
+    manufacturer: {
+        label: null,
+        value: null
+    },
+    name: {
+        label: null,
+        value: null
+    },
+    seller: {
+        label: null,
+        value: null
+    },
+    stockMarket: {
+        label: null,
+        value: false
+    },
+    search: {
+        label: null,
+        value: null
+    }
 }
 
 const HomePage = () => {
@@ -29,7 +51,7 @@ const HomePage = () => {
     const {lang,userId} = useParams();
     const [params,setParams] = useState(initialParams)
     const [open, setOpen] = useState(false);
-    const {t} = useTranslation()
+    const {t} = useTranslation();
     const {
         data,
         fetchNextPage,
@@ -43,7 +65,15 @@ const HomePage = () => {
             method: "get",
             baseURL: config.API_ROOT,
             url: `${URLS.product_list}/${userId}`,
-            params: {...params, page: pageParam},
+            params: {
+                search: get(params, 'search.value'),
+                category: get(params, 'category.value'),
+                country: get(params, 'country.value'),
+                manufacturer: get(params, 'manufacturer.value'),
+                seller: get(params, 'seller.value'),
+                stockMarket: get(params, 'stockMarket.value'),
+                page: pageParam
+            },
         })
             .then(response => response?.data?.data?.content)
             .catch(error => console.error('Error fetching data:', error)),

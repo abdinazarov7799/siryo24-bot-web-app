@@ -62,17 +62,17 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
         }
     }, [categories]);
 
-    const onChange = (name,value) => {
+    const onChange = (name,value,label) => {
         setPreParams(prevState => {
-            return {...prevState, [name]: value};
+            return {...prevState, [name]: {label,value}};
         })
     }
     const onClearParam = (name) => {
         setParams(prevState => {
-            return {...prevState, [name]: null};
+            return {...prevState, [name]: {label:name, value:null}};
         })
     }
-
+    console.log(preParams,'preParams')
     return (
         <>
             <Affix offsetTop={10}>
@@ -81,37 +81,38 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
                     suffix={<FilterOutlined onClick={() => setOpen(!open)} />}
                     style={{width: "100%"}}
                     placeholder={t("Marka bo'yicha qidirish masalan: 27")}
-                    value={get(params,'search')}
+                    value={get(params,'search.value')}
                     onChange={(e) => setParams(prevState => {
-                        if (isEmpty(e.target.value)) {
-                            return {...prevState, ["search"]: null}
+                        let value = e.target.value;
+                        if (isEmpty(value)) {
+                            return {...prevState, ["search"]: {label:null,value:null}}
                         }else{
-                            return {...prevState, ["search"]: e.target.value}
+                            return {...prevState, ["search"]: {label:value,value}}
                         }
                     })}
                 />
                 {
                     !isEmpty(params) && (
-                        <Space style={{marginTop: 5}}>
+                        <Flex style={{maxWidth: "100%",flexFlow: "wrap"}}>
                             {
                                 Object.entries(params)?.map((item) => {
-                                    console.log(item,'item')
                                     let name = get(item,'[0]')
-                                    let value = get(item,'[1]')
-                                    if (!isNull(value) && value) {
+                                    let child = get(item,'[1]')
+                                    if (!isNull(get(child,'value')) && get(child,'value')) {
                                         return (
                                             <Tag
                                                 closable
                                                 color={colorPrimary}
+                                                style={{marginTop: 5}}
                                                 onClose={() => onClearParam(name)}
                                             >
-                                                {isEqual(value,true) ? t("Birja") : value}
+                                                {t(get(child,'label'))}
                                             </Tag>
                                         )
                                     }
                                 })
                             }
-                        </Space>
+                        </Flex>
                     )
                 }
             </Affix>
@@ -129,17 +130,17 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
                         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                         placeholder={t("Kategoriya")}
                         allowClear
-                        value={get(preParams,'category')}
+                        value={get(preParams,'category.value')}
                         treeData={treeData}
-                        onChange={(e) => onChange("category",e)}
+                        onChange={(value,label) => onChange("category",value,...label)}
                     />
                     <Select
                         allowClear
                         placeholder={t("Mamlakat")}
                         loading={isLoadingCountries}
                         style={{width: "100%"}}
-                        value={get(preParams,'country')}
-                        onChange={(e) => onChange("country",e)}
+                        value={get(preParams,'country.value')}
+                        onChange={(value) => onChange("country",value,value)}
                         options={get(countries,'data.data')?.map((item) => {
                             return {
                                 value: item,
@@ -152,8 +153,8 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
                         placeholder={t("Ishlab chiqaruvchi")}
                         loading={isLoadingManufacturers}
                         style={{width: "100%"}}
-                        value={get(preParams,'manufacturer')}
-                        onChange={(e) => onChange("manufacturer",e)}
+                        value={get(preParams,'manufacturer.value')}
+                        onChange={(value) => onChange("manufacturer",value,value)}
                         options={get(manufacturers,'data.data')?.map((item) => {
                             return {
                                 value: item,
@@ -166,8 +167,8 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
                         placeholder={t("Sotuvchi")}
                         loading={isLoadingSellers}
                         style={{width: "100%"}}
-                        value={get(preParams,'seller')}
-                        onChange={(e) => onChange("seller",e)}
+                        value={get(preParams,'seller.value')}
+                        onChange={(value,data) => onChange("seller",get(data,'value'),get(data,'label'))}
                         options={get(sellers,'data.data')?.map((item) => {
                             return {
                                 value: get(item,'id'),
@@ -177,7 +178,9 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
                     />
                     <Flex align={"center"} justify={"space-between"}>
                         <Title level={4}>{t("Birja")}</Title>
-                        <Switch value={get(preParams,'stockMarket')} onChange={(e) => onChange("stockMarket",e)}/>
+                        <Switch
+                            value={get(preParams,'stockMarket.value')}
+                            onChange={(value) => onChange("stockMarket",value,'Birja')}/>
                     </Flex>
                     <Button type="primary" block onClick={() => {
                         setParams(preParams)
