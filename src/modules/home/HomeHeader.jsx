@@ -95,6 +95,7 @@ const HomeHeader = ({open,setOpen,params,setParams,userId,initialParams}) => {
                         <Space style={{marginTop: 5}}>
                             {
                                 Object.entries(params)?.map((item) => {
+                                    console.log(item,'item')
                                     let name = get(item,'[0]')
                                     let value = get(item,'[1]')
                                     if (!isNull(value) && value) {

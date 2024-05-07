@@ -58,7 +58,6 @@ const AllApplication = () => {
                 hasMore={hasNextPage}
                 loader={<h4></h4>}
                 style={{width: "100%", minHeight: "50vh"}}
-                hasChildren={false}
             >
                 <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
                     {isLoading ? <Loader /> : isEmpty(productsData) ? <Empty style={{marginTop: 50}} description={t("Malumot yo'q")}/> : productsData?.map((item,index) => {

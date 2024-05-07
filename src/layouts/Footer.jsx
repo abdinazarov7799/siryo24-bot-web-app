@@ -60,7 +60,7 @@ const Footer = ({userId,lang}) => {
                 >
                     <UnorderedListOutlined style={buttonIconStyle}/>
                     <Text style={{...buttonTextStyle,color: isEqual(pathname,get(navigateUrls,"catalog")) ? colorPrimary : buttonColor}}>
-                        {t("Asosiy menyu")}
+                        {t("Menyu")}
                     </Text>
                 </div>
                 <div

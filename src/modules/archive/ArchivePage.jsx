@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Container from "../../components/Container.jsx";
 import Footer from "../../layouts/Footer.jsx";
 import {useParams} from "react-router-dom";
-import {Button, Col, Empty, Flex, Row, Space, Typography} from "antd";
+import {Button, Col, Empty, Flex, Row, Segmented, Space, Typography} from "antd";
 import {useTranslation} from "react-i18next";
 import dayjs from "dayjs";
 import {URLS} from "../../constants/url.js";
@@ -34,7 +34,7 @@ const ItemDiv = styled.div`
 const ArchivePage = () => {
     const {userId,lang} = useParams()
     const {t} = useTranslation();
-    const [params, setParams] = useState(initialParams)
+    const [params, setParams] = useState()
     const {
         data,
         fetchNextPage,
@@ -63,13 +63,23 @@ const ArchivePage = () => {
                 <Flex justify={"center"}>
                     <Title level={3}>{t("Arxiv narxlar")}</Title>
                 </Flex>
+                <Flex>
+                    <Segmented
+                        block
+
+                        style={{width:'100%'}}
+                        options={[1, 7, 30, 90, 365]}
+                        onChange={(value) => {
+                            console.log(value);
+                        }}
+                    />
+                </Flex>
                 <InfiniteScroll
-                    dataLength={data ? productsData.length : 0}
+                    dataLength={data ? productsData?.length : 0}
                     next={() => fetchNextPage()}
                     hasMore={hasNextPage}
                     loader={<h4></h4>}
                     style={{width: "100%", minHeight: "50vh"}}
-                    hasChildren={false}
                 >
                     <Space style={{width: "100%"}} direction={"vertical"} size={"middle"}>
                         {isLoading ? <Loader /> : isEmpty(productsData) ? <Empty style={{marginTop: 50}} description={t("Malumot yo'q")}/> : productsData?.map((item,index) => {
@@ -79,41 +89,23 @@ const ArchivePage = () => {
                                         <Row justify={"space-between"}>
                                             <Col>
                                                 <Flex wrap={"wrap"}>
-                                                    {
-                                                        get(item,'products',[])?.map((product,index)=> {
-                                                            return <Title level={4}>{get(product, 'name')}{index > 0 && ","}</Title>
-                                                        })
-                                                    }
+                                                    <Title level={4}>{get(item, 'product')}</Title>
                                                 </Flex>
                                             </Col>
                                             <Col style={{textAlign: "end"}}>
                                                 <Flex style={{width: 153}} align={"center"}>
                                                     <img src={calendar} width={24} height={24} style={{margin: "auto"}}/>
-                                                    <Text>{get(item,'createdAt')}</Text>
+                                                    <Text>{get(item,'updatedTime')}</Text>
                                                 </Flex>
                                             </Col>
                                         </Row>
-                                        <Flex wrap={"wrap"}>
-                                            <CommentOutlined />
-                                            <Text strong style={{margin: "0 5px"}}>{t("Kommentariya")}: </Text>
-                                            <Text>{get(item,'comment')}</Text>
+                                        <Flex justify={"space-between"}>
+                                            <Text strong>{t("Ishlab chiqaruvchi")}: {get(item,'manufacturer')}</Text>
+                                            <Text strong>{t("Narx")}: {get(item,'price')}</Text>
                                         </Flex>
                                         <Flex justify={"space-between"} align={"center"}>
-                                            <Col>
-                                                <Flex align={"center"}>
-                                                    <img src={UserImg}/>
-                                                    <Text style={{marginLeft: 5}} strong>{t("Ismi")}: {get(item,'user.name')}</Text>
-                                                </Flex>
-                                            </Col>
-                                            <Col>
-                                                <a href={`tel:${get(item,'phoneNumber')}`} target={"_blank"}>
-                                                    <Button
-                                                        type="primary"
-                                                    >
-                                                        {get(item,'user.phoneNumber')}
-                                                    </Button>
-                                                </a>
-                                            </Col>
+                                            <Text strong>{t("Sotuchi")}: {get(item,'seller')}</Text>
+                                            <Text strong>{t("Davlat")}: {get(item,'country')}</Text>
                                         </Flex>
                                     </Space>
                                 </ItemDiv>

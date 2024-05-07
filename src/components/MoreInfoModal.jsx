@@ -13,7 +13,7 @@ const MoreInfoModal = ({isModalOpen,setModalOpen,product,userId}) => {
     const {t} = useTranslation();
     const {data,isLoading} = useGetOneQuery({
         id: get(product,'id'),
-        url: URLS.product_get_by_id,
+        url: `${URLS.product_get_by_id}/${get(product,'sellerId')}`,
         key: `${KEYS.product_get_by_id}_${get(product,'id')}`,
         params: {
             params: {

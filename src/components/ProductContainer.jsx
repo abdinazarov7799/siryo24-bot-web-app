@@ -57,7 +57,6 @@ const Product = ({product,userId,lang,listKeyId,setParams}) => {
     const {t} = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isModalOpenAnalogs, setModalOpenAnalogs] = useState(false);
-
     const {mutate} = usePostQuery({
         listKeyId,
         hideSuccessToast: true
@@ -65,7 +64,7 @@ const Product = ({product,userId,lang,listKeyId,setParams}) => {
 
     const addRemoveFavorities = (id,add) => {
         mutate({
-            url: `${URLS.product_add_remove_favorites}/${id}/${userId}?add=${add}`,
+            url: `${URLS.product_add_remove_favorites}/${id}/${get(product,'sellerId')}/${userId}?add=${add}`,
         })
     }
     const setProductToParams = (name) => {
